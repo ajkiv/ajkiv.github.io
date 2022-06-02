@@ -1,0 +1,59 @@
+h1, h2, h3, h4, h5, h6, p {
+  padding-left: 10px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Verdana, sans-serif;
+  background-color: #FFFFF0;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+/*  background-color: #444; */
+  background-color: #787769; /* Color: Grey Moss */
+  overflow: auto;
+  width: 100%;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  /* background-color: #ddd; old color, some sort of grey  */ 
+  background-color: #89CFF0; /* Color: Baby Blue */ 
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  /* background-color: #FF4500; old color, some sort of tomato orange / red */ 
+  background-color: #09C3DB; /* Color: Ocean water */
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+	display: block;
+  }
+  .topnav.responsive a {
+    float: none;
+	display: block;
+	text-align: left;
+  }
+}
