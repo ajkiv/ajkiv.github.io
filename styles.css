@@ -2,7 +2,7 @@ h1, h2, h3, h4, h5, h6, p {
   padding-left: 10px;
 }
 
-body {
+body, pre {
   margin: 0;
   font-family: Arial, Verdana, sans-serif;
   background-color: #FFFFF0;
