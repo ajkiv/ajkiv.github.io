@@ -42,9 +42,11 @@ From command-line to compile: javac -cp path/tra.jar Program.java
 From command-line to run: java -cp path/tra.jar Program.java
 Note: I had issues compiling the main program using this method, but no issues compiling and running using Eclipse. 
 
+	
 
 OUTPUT OF THE CODE:
-
+	
+=================
 
 Graph:
 0 | 3-5.1 1-7.1 
@@ -111,7 +113,10 @@ Messed forest 2
 Roots: [[5]]
 heaviestTree: NaN : []
 
+=================
 
+
+	
 CODE EXPLAINED IN A QUICK MANNER:
 
 -Goal: find the heaviest valid tree in a graph - trees weight is calculated by taking sum of its' edges
@@ -122,9 +127,10 @@ CODE EXPLAINED IN A QUICK MANNER:
 -if there are root nodes of valid trees, we will then start searching for the heaviest tree. 
 -In the end, we return the heaviest tree with a list of the nodes included in this tree, or value NaN combined with empty list of nodes.
 
+	
 
 THE PARTS OF THE CODE THAT ARE MOST RELEVANT:
-
+=================
     /**
       * X1 Heaviest tree.
       *
