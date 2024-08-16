@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bogosort in Perl</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+public class QuickSortMedianPivot {
+    public static void main(String[] args) {  
+        int[] array = {3, 6, 8, 10, 1, 1, 10, 2, 2, 2, 2, 2, 1, 8, 6, 10};
+        quicksort(array, 0, array.length - 1);
+        
+        // Print the sorted array
+        for (int i : array) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+    
+    public static void quicksort(int[] array, int left, int right) {
+      // check for base case in recursion
+      if(right <= left) {
+        return;
+      }
+      
+      int pivotIndex = choosePivot(array, left, right);
+      int pivotValue = array[pivotIndex];
+      
+      // Move pivot to the end
+      swap(array, pivotIndex, right); // This modifies the original array directly
+      pivotIndex = right; // Now the pivot is at the end
+      
+      // Partition the array around the pivotValue
+      int newPivotIndex = partition(array, left, right, pivotValue);
+
+      // Recursive calls for left and right sub-arrays
+      quicksort(array, left, newPivotIndex - 1);
+      quicksort(array, newPivotIndex + 1, right);
+    }
+    
+    // Method to choose pivot using the median-of-three method
+    private static int choosePivot(int[] array, int left, int right) {
+        int mid = left + (right - left) / 2;
+
+        // Use the first, middle, and last values for comparison
+        int first = array[left];
+        int middle = array[mid];
+        int last = array[right];
+
+        // Find the median of the three
+        if ((first >= middle && first <= last) || (first <= middle && first >= last)) {
+            return left; // first is the median
+        } else if ((middle >= first && middle <= last) || (middle <= first && middle >= last)) {
+            return mid; // middle is the median
+        } else {
+            return right; // last is the median
+        }
+    }
+    
+    // swap method directly influences the array
+    private static void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    private static int partition(int[] array, int left, int right, int partitionPivotValue) {
+        int storeIndex = left;
+        for (int i = left; i < right; i++) {
+            if (array[i] < partitionPivotValue) {
+                swap(array, storeIndex, i);
+                storeIndex++;
+            }
+        }
+        // Move pivot to its final place
+        swap(array, storeIndex, right);
+        return storeIndex;
+    }
+}  
+
+// runtime complexity:
+// best case: O(n log n)
+// average case: O(n log n) 
+// worst case (array is almost sorted): O(n^2)
+
+// note: using median-of-three -pivot leads to more balanced splits and 
+//      reduced depth of recursion,
+//      but the Ordo-complexities in all 3 cases (best, average, worst) remain the same.
+
+// space complexity: O()log(n)) because of recursion
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
