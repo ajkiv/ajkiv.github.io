@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>BFS4Trees Explanation</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+How to run the code:
+
+download tra2017.jar, which contains the necessary custom libraries
+
+copy the GraphMaker.java and BreadthfirstSearchForGraphTrees.java codes to your editor (and save them)
+
+to compile the code in Eclipse
+go your project, right click => Build Path => Configure Build Path => Libraries => Choose 'classpath' and then choose 'Add External JARs...' => Add tra2017.jar => Apply and Close.
+
+Now you can run the code in Eclipse.
+
+From command-line to compile: javac -cp path/tra.jar Program.java
+From command-line to run: java -cp path/tra.jar Program.java
+Note: I had issues compiling the main program using this method, but no issues compiling and running using Eclipse. 
+
+
+Output of the code: 
+
+
+Graph:
+0 | 3-5.1 1-7.1 
+1 | 6-4.3 
+2 | 
+3 | 
+4 | 6-3.3 5-7.6 
+5 | 4-5.2 7-5.4 6-1.4 
+6 | 
+7 | 
+
+Roots: [[2], [0]]
+heaviestTree: 16.5 : [[0], [3], [1], [6]]
+
+DAG:
+0 | 2-5.2 
+1 | 7-1.4 
+2 | 
+3 | 2-5.4 7-7.1 
+4 | 2-3.3 
+5 | 3-7.6 
+6 | 
+7 | 2-5.1 0-4.3 
+
+Roots: [[5], [4], [1], [6]]
+heaviestTree: 0.0 : [[6]]
+
+Forest:
+0 | 2-5.2 
+1 | 7-5.1 
+2 | 
+3 | 4-3.3 
+4 | 
+5 | 3-7.6 6-4.3 1-1.4 
+6 | 
+7 | 0-5.4 
+
+Roots: [[5]]
+heaviestTree: 32.300003 : [[5], [3], [4], [6], [1], [7], [0], [2]]
+
+Messed forest 1
+0 (0) | 2-5.2 
+1 (0) | 7-5.1 
+2 (0) | 
+3 (0) | 4-3.3 
+4 (0) | 
+5 (0) | 3-7.6 6-4.3 1-1.4 2-4.9 
+6 (0) | 
+7 (0) | 0-5.4 
+
+Roots: [[5]]
+heaviestTree: NaN : []
+
+Messed forest 2
+0 (0) | 2-5.2 
+1 (0) | 7-5.1 
+2 (0) | 3-4.7 6-1.5 
+3 (0) | 4-3.3 
+4 (0) | 
+5 (2) | 3-7.6 6-4.3 1-1.4 2-4.9 
+6 (0) | 
+7 (0) | 0-5.4 
+
+Roots: [[5]]
+heaviestTree: NaN : []
+
+
+H1
+
+Code explained in a quick manner:
+
+-Goal: find the heaviest valid tree in a graph - trees weight is calculated by taking sum of its' edges
+-we first identify the root nodes from the graph
+ *color all the nodes with edges point at them
+ *return all the nodes that were not colored in this manner, these are the root-nodes
+-we remove the root nodes from the search if there are cross forward, back, or cross edges
+-if there are root nodes of valid trees, we will then start searching for the heaviest tree. 
+-In the end, we return the heaviest tree with a list of the nodes included in this tree, or value NaN combined with empty list of nodes.
+
+
+
+    float heaviestTree(DiGraph G, LinkedList<Vertex> resultTree) {
+    	
+    	// Time complexity
+    	// -n = number of nodes, e = number of edges
+    	// -The nodes get colored with the base-color white numerous times, O(n)
+    	// -rootVertices(DiGraph g):
+    	//  *Visits all nodes, and loots at all neighbours of the nodes: O(n+e)
+    	//  *Gathers all the nodes that get colored black by visiting all nodes: O(n)
+    	// -Finding out all the authhentic trees:
+    	//  *going through the list of rootnodes (twice): O(n) at worst case
+    	//  *deleting non-authentic root nodes: worst case O(n), average case O(1)
+    	// -Finding the heaviest tree:
+    	//  *traversing through the trees using edges starting from root node
+    	//   -worst case O(n+e)
+        // -Building the heaviest tree into a LinkedList
+    	//  *authentic trees have sparse edges
+    	//  *authentic trees are likely to have less nodes than total nodes in the graph
+    	//  *result: time complexity is less than in the heaviest part of the code, which was O(n+e)
+    	// -Final time complexity: O(n+e)
+    	//  *Heaviest part of the code is at rootVertices(DiGraph g): O(n+e)
+
+
+    	// Variable for measuring weight of a tree
+    	float treeWeight = 0;
+    	
+    	// Variable for keeping track of the heaviest tree found so far
+        float heaviestTree = 0;
+        
+        LinkedList<Vertex> tempRoot = new LinkedList<Vertex>();
+
+        LinkedList<Vertex> authenticRoots = new LinkedList<Vertex>();
+        
+        LinkedList<Vertex> inauthenticRoots = new LinkedList<Vertex>();
+        
+        // Initializing a Set for keeping track of root vertices
+        Set<Vertex> initialRoots = new Set<Vertex>();
+
+        // Using the rootVertices() method to find all the rootVertices in the graph
+        initialRoots = rootVertices(G);
+
+        // Adding the found root vertices to the juuret1 -list
+        authenticRoots.addAll(initialRoots);
+        
+        // We traverse through the rootnodes-list in order for the first time
+        // we call the notTree() method to know which roots are parts of inauthentic trees
+        colorTheGraph(G, DiGraph.WHITE);
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+        	if (invalidTree(authenticRoots.get(nro)) == true) {
+        		inauthenticRoots.add(authenticRoots.get(nro));
+        	}
+        }
+
+        // Traversing through the rootnodes-list in reverse order to find trees with 2 root nodes
+        colorTheGraph(G, DiGraph.WHITE);
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+        	if (invalidTree(authenticRoots.get((authenticRoots.size()-1)-nro))== true) {
+        		inauthenticRoots.add(authenticRoots.get(nro));
+        	}
+        }
+
+        // We remove from the rootnodes-list the rootnodes which don't contain an authentic tree
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+            if (inauthenticRoots.contains(authenticRoots.get(nro))) {
+            	authenticRoots.remove(nro);
+            }
+        }
+        
+        // If there are rootnodes left, we will start searching for the heaviest tree
+        if (authenticRoots.peekFirst() != null) {
+            for (int nro = 0; nro < authenticRoots.size(); nro++) {
+            	colorTheGraph(G, DiGraph.WHITE);
+                treeWeight = (measureTreeWeight(authenticRoots.get(nro)));
+                if (treeWeight > heaviestTree) {
+                	heaviestTree = treeWeight;
+                	tempRoot.clear(); 
+                	tempRoot.add(authenticRoots.get(nro));
+                }
+            }
+            // Now we start building a LinkedList for the heaviest tree we found
+            
+            // We begin by coloring all the graph nodes white
+            colorTheGraph(G, DiGraph.WHITE);
+            
+            // Case, where the only tree is the size of the rootnode
+            if (tempRoot.peekFirst() == null) {
+            	resultTree.add(authenticRoots.peekFirst());
+            	return heaviestTree;
+            }
+            // Here we build the LinkedList of the heaviest tree
+            else {
+              addDfs(resultTree, tempRoot.get(0));
+              return heaviestTree;
+            }
+        }
+
+        else {
+            return Float.NaN;
+        }
+    } // heaviestTree()
+
+    // Dfs = depth first search
+    void addDfs(LinkedList<Vertex> resultTree, Vertex start) {
+        start.setColor(DiGraph.BLACK);
+        resultTree.add(start);
+        for (Vertex n : start.neighbors()) {
+            if (n.getColor() == DiGraph.WHITE) {
+                addDfs(resultTree, n);
+            }
+        }
+    }
+
+    float measureTreeWeight(Vertex start) {
+    	float weightOfTree = 0;
+    	//float puunPaino = 0;
+    	start.setColor(DiGraph.BLACK);
+        for (Edge e : start.edges()) {
+            Vertex w = e.getEndPoint(start);
+            if (w.getColor() == DiGraph.WHITE) {
+            	weightOfTree = weightOfTree + e.getWeight();
+            	weightOfTree = weightOfTree + measureTreeWeight(w);
+            }
+        }
+        return weightOfTree;
+        }
+
+  boolean invalidTree(Vertex start) {  
+	start.setColor(DiGraph.GREY);
+	for (Vertex vertex : start.neighbors()) {
+		if (vertex.getColor() == DiGraph.GREY){
+			return true;
+		}
+		else if (vertex.getColor() == DiGraph.BLACK) {
+			return true;
+		}
+		else if (vertex.getColor() == DiGraph.WHITE) {
+			if(invalidTree(vertex)) {
+				return true;
+			}
+		}
+	}
+	start.setColor(Graph.BLACK);
+	return false;
+}
+
+    // Set of vertices with no incoming edge
+    Set<Vertex> rootVertices(DiGraph g) {
+
+        Set<Vertex> R = new Set<Vertex>();
+
+        colorTheGraph(g, DiGraph.WHITE);
+        
+        // We color the non-rootnodes black
+        for (Vertex v : g.vertices()) {
+            if (v.getColor() == 1);
+            rootColorDfs(v);
+        }
+
+        // Collecting rootnodes (nodes colored white)
+        for (Vertex v : g.vertices()) {
+            if (v.getColor() == 1) {
+                R.add(v);
+            }
+        }
+
+        return R;
+    }   // rootVertices()
+
+
+    void rootColorDfs(Vertex start) {
+        for (Vertex n : start.neighbors()) {
+            if (n.getColor() == 1) {
+                n.setColor(2);
+                rootColorDfs(n);
+            }
+        }
+    }
+
+    void colorTheGraph(DiGraph G, int color) {
+        for (Vertex v : G.vertices()) {
+            v.setColor(color);
+        }
+    }
+
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
