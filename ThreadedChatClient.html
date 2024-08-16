@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bogosort in Perl</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+
+
+// This client side code establishes connection to ThreadedChatServer.java,
+// which handles the server side logic.
+
+import java.net.*;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+
+public class ThreadedChatClient extends Thread {
+
+	Socket chatServer;
+	
+	// Flag to control the stopping of threads
+	private volatile boolean running = true; 
+
+	// index, which decides the role of a thread: whether the thread is sending or receiving
+	int threadIndex = 0;
+
+	public ThreadedChatClient() {
+	}
+
+	public ThreadedChatClient(Socket ss){
+		chatServer = ss;
+	}
+
+	// A constructor for creating ThreadedChatClient-object, which includes the threadIndex
+	public ThreadedChatClient(Socket ss, int threadIndex){  
+		chatServer = ss;
+		this.threadIndex = threadIndex;
+	}
+
+	public int getThreadIndex() {
+		return threadIndex;
+	}
+
+	public Socket getSocket() {
+		return this.chatServer;
+	}
+	
+	static LinkedList<ThreadedChatClient> chatClientThreads = null;
+
+
+	public static void main(String[] args) {  // can be taken as arguments: serverConnectionPort & serverAddress
+
+		// default serverConnectionPort
+		int serverConnectionPort = 12345;
+		
+		// default serverAddress
+		String serverAddress = "localhost"; 
+
+		// Enables giving new values via command-line
+		if (args.length > 1) {
+			serverAddress = String.valueOf(args[0]);
+			serverConnectionPort = Integer.valueOf(args[1]);
+		}
+
+		ThreadedChatClient chatClient = new ThreadedChatClient();
+
+		// Initializing the chatClientThreads-list, which is later used for establishing 
+		// two chat-communication threads: a thread for receiving and a thread for sending messages.
+		chatClientThreads = new LinkedList<ThreadedChatClient>();
+
+		boolean isSessionStarted = chatClient.startChatSession(serverAddress, serverConnectionPort);
+
+		if (!isSessionStarted) {
+			System.out.println("An error occurred while starting the chat session.");
+		}
+		
+
+	} // main()
+
+	public boolean startChatSession(String serverAddress, int serverConnectionPort) {	
+
+		Socket clientSocket = null;
+
+		BufferedReader in = null;
+
+		 // Attempting to connect to the server
+	    try {
+	    	// Connect to the server. Connection is threaded.
+	        clientSocket = new Socket(serverAddress, serverConnectionPort); 
+	        System.out.println("Client: Connection established: " + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
+
+	        // Create input stream for reading messages from the server
+	        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // Input buffer
+
+	        // Read and print the welcoming message from the server
+	        System.out.println(in.readLine());
+	        
+	    } catch (IOException e) {
+	        System.err.println("Error during socket communication: " + e.getMessage());
+	        if (clientSocket != null && !clientSocket.isClosed()) {
+	            try {
+	                clientSocket.close(); // Close socket in case of an error
+	            } catch (IOException closeException) {
+	                System.err.println("Error closing socket: " + closeException.getMessage());
+	            }
+	        }
+	        return false; // Return false if there was an error
+	    }
+		
+		// This will create two threads, one for receiving and the other for sending messages
+		for(int i=1; i<= 2; i++){ 
+			ThreadedChatClient chatThread = new ThreadedChatClient(clientSocket, i);
+			chatClientThreads.add(chatThread);
+			chatThread.start();
+		}
+		return true;
+	}
+
+	// running the chat session
+	public void run() {
+		
+		PrintWriter outgoingWriter = null;
+		
+		BufferedReader incomingReader = null;
+		
+		try (Scanner userInput = new Scanner(System.in)) {
+	     
+	    	outgoingWriter = new PrintWriter(chatServer.getOutputStream(), true);
+	        incomingReader = new BufferedReader(new InputStreamReader(chatServer.getInputStream()));
+
+	        if (this.getThreadIndex() == 1) { // Sending thread
+	            String message;
+	            while (running) {
+	            	message = userInput.nextLine();
+	                outgoingWriter.println(message);
+
+	                if (message.equalsIgnoreCase("END")) {
+	                	// Wait for acknowledgment from the server
+	                	String goodbyeMessage = incomingReader.readLine();	                	
+	                    if (goodbyeMessage != null) {
+	                        System.out.println(goodbyeMessage); // Print goodbye message from server
+	                    }
+	                    running = false; // Signal to stop the thread
+	                    break; // Exit the loop
+	                }
+	            }
+	        } else if (this.getThreadIndex() == 2) { // Receiving thread
+	            while (running) {
+	                String incomingMessage = incomingReader.readLine();
+	                if (incomingMessage != null) {
+	                    System.out.println(incomingMessage);
+	                } else {
+	                    // If null is received, it means the server closed the connection
+	                    running = false; 
+	                    break; // Exit the loop
+	                }
+	            }
+	        }
+	    } catch (IOException e) {
+	        System.err.println("An I/O error occurred: " + e.getMessage());
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        // Handle all other unexpected exceptions
+	        System.err.println("An unexpected error occurred: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        // Clean up resources
+	        try {
+	            if (outgoingWriter != null) {
+	            	outgoingWriter.close(); // Close PrintWriter
+	            }
+	            if (incomingReader != null) {
+	            	incomingReader.close(); // Close BufferedReader
+	            }
+	            if (chatServer != null) {
+	                if (!chatServer.isClosed()) {
+	                    chatServer.close(); // close socket
+	                }
+	            }
+	        } catch (Exception e) {
+	            System.err.println(e);
+	        }
+	    }
+	}
+}	
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
