@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="styles.css">
-  <title>Bogosort in Perl</title>
+  <title>DFS for GraphTrees java</title>
 <style>
   pre {
     padding-left: 10px;
@@ -29,18 +29,9 @@
 <pre>
 import fi.joensuu.cs.tra.*;
 
-
 import java.util.LinkedList;
-import java.util.Iterator;
-import java.lang.RuntimeException;
 
-
-// skeleton and test program for X1 and 14.
-
-//       change class name and file name to your username, all lower case
-//           ||||||||||
-//           vvvvvvvvvv
-public class BreadthfirstSearchForGraphTrees {
+public class DepthFirstSearchForGraphTrees {
 
     public static void main(String[] args) {
 
@@ -64,9 +55,7 @@ public class BreadthfirstSearchForGraphTrees {
         if (args.length > 2)
             seed = Integer.valueOf(args[2]);
 
-
-        // change to your username also here
-        BreadthfirstSearchForGraphTrees y = new BreadthfirstSearchForGraphTrees();
+        DepthFirstSearchForGraphTrees y = new DepthFirstSearchForGraphTrees();
 
         // create random graph
         DiGraph graph = GraphMaker.createDiGraph(vertices, edges, seed);
@@ -147,10 +136,6 @@ public class BreadthfirstSearchForGraphTrees {
 
     } // main()
 
-
-
-
-
     /**
       * X1 Heaviest tree.
       *
@@ -180,124 +165,97 @@ public class BreadthfirstSearchForGraphTrees {
       * @return Weight of the tree, or Float.NaN if no tree in graph.
       **/
     float heaviestTree(DiGraph G, LinkedList<Vertex> resultTree) {
+    	
+    	// Time complexity
+    	// -n = number of nodes, e = number of edges
+    	// -The nodes get colored with the base-color white numerous times, O(n)
+    	// -rootVertices(DiGraph g):
+    	//  *Visits all nodes, and loots at all neighbours of the nodes: O(n+e)
+    	//  *Gathers all the nodes that get colored black by visiting all nodes: O(n)
+    	// -Finding out all the authhentic trees:
+    	//  *going through the list of rootnodes (twice): O(n) at worst case
+    	//  *deleting non-authentic root nodes: worst case O(n), average case O(1)
+    	// -Finding the heaviest tree:
+    	//  *traversing through the trees using edges starting from root node
+    	//   -worst case O(n+e)
+        // -Building the heaviest tree into a LinkedList
+    	//  *authentic trees have sparse edges
+    	//  *authentic trees are likely to have less nodes than total nodes in the graph
+    	//  *result: time complexity is less than in the heaviest part of the code, which was O(n+e)
+    	// -Final time complexity: O(n+e)
+    	//  *Heaviest part of the code is at rootVertices(DiGraph g): O(n+e)
 
-        // TODO
 
-        // DO NOT try to write everything here, it is not possible (or practical).
-        // Plan modular solution (several methods) according to your algorithm designed
-        // on paper.
+    	// Variable for measuring weight of a tree
+    	float treeWeight = 0;
+    	
+    	// Variable for keeping track of the heaviest tree found so far
+        float heaviestTree = 0;
+        
+        LinkedList<Vertex> tempRoot = new LinkedList<Vertex>();
 
-        // If you do not have a planned algorithm now, please shut down your computer and
-        // return to the drawing board.
+        LinkedList<Vertex> authenticRoots = new LinkedList<Vertex>();
+        
+        LinkedList<Vertex> inauthenticRoots = new LinkedList<Vertex>();
+        
+        // Initializing a Set for keeping track of root vertices
+        Set<Vertex> initialRoots = new Set<Vertex>();
 
-        // When you have the plan, follow it without making any unplanned hacks.
-        // If you need to add something, you must be able to reason it for yourself.
+        // Using the rootVertices() method to find all the rootVertices in the graph
+        initialRoots = rootVertices(G);
 
-    	// Ohjelma
-
-/**
- * 	Itsearvio:
- * Ohjelma tuntuu toimivan hyvin ja oikeellisesti. Olen huolissani
- * ohjelmassani kohdasta, jossa poistan juurisolmut, joiden alla ei
- * ole oikeaa puuta contains-operaatiolla: En ole täysin varma hoitaako
- * kyseinen ohjelmapätkä tehtävänsä ongelmitta.
- *
- * Aikavaatimus:
- * -n = solmujen lkm, e = kaarien lkm
- * -Useita solmujen varityksia pohjavarilla: O(n)
- * -rootVertices(DiGraph g):
- *   >kaydaan kaikissa solmuissa, katsotaan kaikkien solmujen naapurit
- *     >>O(n+e)
- *   >lopuksi kerataan kaikki mustat solmut kaymalla kaikissa solmuissa
- *     >>O(n)
- * -Aitojen puiden selvitys
- *   >juurisolmujen listan läpikäynti (kahdesti)
- *     >>ei suurempi kuin O(n+e)
- *   >ei-aitojen puiden juurisolmujen poisto:
- *     >>Enintään O(n), yleisin tapaus O(1)
- * -Raskaimman puun selvitys:
- *   >juurisolmuista alkavien puiden läpikäynti kaarien avulla:
- *     >>Enintään O(n+e)
- *   >vertaukset ja sijoitukset
- *     >>yksikköaikaa
- * -Raskaimman puun rakentaminen LinkedListiin:
- *   > aidoissa puissa vahan kaaria
- *   > aidoissa puissa solmujen lukumaara todennakoisesti pienempi kuin n
- *     >> ei raskas verrattuna raskaimpaan ohjelman osaan
- * => Lopullinen aikavaatimus:
- *    > isoin tekija on O(n+e) kohdassa rootVertices(DiGraph g)
- *      >> Lopullinen aikavaatimus: O(n+e)
- *
- */
-    	float puuPaino = 0;
-        float maxPaino = 0;
-
-        LinkedList<Vertex> tempJuuri = new LinkedList<Vertex>();
-
-        LinkedList<Vertex> juuret1 = new LinkedList<Vertex>();
-        LinkedList<Vertex> juuret2 = new LinkedList<Vertex>();
-
-        Set<Vertex> juuriSolmut = new Set<Vertex>();
-
-        juuriSolmut = rootVertices(G);
-
-        juuret1.addAll(juuriSolmut);
-
-        // Kaydaan juurisolmujen lista jarjestyksessa lapi
-        // ensimmaisen kerran
-        varita(G, DiGraph.WHITE);
-        for (int nro = 0; nro < juuret1.size(); nro++) {
-        	if (eiPuu(juuret1.get(nro)) == true) {
-        		juuret2.add(juuret1.get(nro));
+        // Adding the found root vertices to the juuret1 -list
+        authenticRoots.addAll(initialRoots);
+        
+        // We traverse through the rootnodes-list in order for the first time
+        // we call the notTree() method to know which roots are parts of inauthentic trees
+        colorTheGraph(G, DiGraph.WHITE);
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+        	if (invalidTree(authenticRoots.get(nro)) == true) {
+        		inauthenticRoots.add(authenticRoots.get(nro));
         	}
         }
 
-        // Kaydaan juurisolmujen lista lapi kaanteisessa jarjestyksessa,
-        // jotta loydetaan puut joissa 2 juurta
-        varita(G, DiGraph.WHITE);
-        for (int nro = 0; nro < juuret1.size(); nro++) {
-        	if (eiPuu(juuret1.get((juuret1.size()-1)-nro))== true) {
-        		juuret2.add(juuret1.get(nro));
+        // Traversing through the rootnodes-list in reverse order to find trees with 2 root nodes
+        colorTheGraph(G, DiGraph.WHITE);
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+        	if (invalidTree(authenticRoots.get((authenticRoots.size()-1)-nro))== true) {
+        		inauthenticRoots.add(authenticRoots.get(nro));
         	}
         }
 
-        //Poistetaan juurisolmujen listalta solmut joiden alla ei aitoa puuta
-        for (int nro = 0; nro < juuret1.size(); nro++) {
-            if (juuret2.contains(juuret1.get(nro))) {
-                juuret1.remove(nro);
+        // We remove from the rootnodes-list the rootnodes which don't contain an authentic tree
+        for (int nro = 0; nro < authenticRoots.size(); nro++) {
+            if (inauthenticRoots.contains(authenticRoots.get(nro))) {
+            	authenticRoots.remove(nro);
             }
         }
-
-        //Poistetaan juurisolmujen listalta solmut joiden alla ei aitoa puuta
-        for (int nro = 0; nro < juuret1.size(); nro++) {
-            if (juuret2.contains(juuret1.get(nro))) {
-                juuret1.remove(nro);
-            }
-        }
-
-        // jos juurisolmuja jaljella, aletaan tutkimaan mika raskain puu
-        if (juuret1.peekFirst() != null) {
-            // tutkitaan mika puu raskain
-            for (int nro = 0; nro < juuret1.size(); nro++) {
-                varita(G, DiGraph.WHITE);
-                puuPaino = (puunPaino(juuret1.get(nro)));
-                if (puuPaino > maxPaino) {
-                    maxPaino = puuPaino;
-                    tempJuuri.clear();
-                    tempJuuri.add(juuret1.get(nro));
+        
+        // If there are rootnodes left, we will start searching for the heaviest tree
+        if (authenticRoots.peekFirst() != null) {
+            for (int nro = 0; nro < authenticRoots.size(); nro++) {
+            	colorTheGraph(G, DiGraph.WHITE);
+                treeWeight = (measureTreeWeight(authenticRoots.get(nro)));
+                if (treeWeight > heaviestTree) {
+                	heaviestTree = treeWeight;
+                	tempRoot.clear(); 
+                	tempRoot.add(authenticRoots.get(nro));
                 }
             }
-            // rakennetaan LinkedList raskaimmalle puulle
-            varita(G, DiGraph.WHITE);
-
-            //mikali ainoa puu on juuren kokoinen
-            if (tempJuuri.peekFirst() == null) {
-            	resultTree.add(juuret1.peekFirst());
-            	return maxPaino;
+            // Now we start building a LinkedList for the heaviest tree we found
+            
+            // We begin by coloring all the graph nodes white
+            colorTheGraph(G, DiGraph.WHITE);
+            
+            // Case, where the only tree is the size of the rootnode
+            if (tempRoot.peekFirst() == null) {
+            	resultTree.add(authenticRoots.peekFirst());
+            	return heaviestTree;
             }
+            // Here we build the LinkedList of the heaviest tree
             else {
-              addDfs(resultTree, tempJuuri.get(0));
-              return maxPaino;
+              addDfs(resultTree, tempRoot.get(0));
+              return heaviestTree;
             }
         }
 
@@ -306,6 +264,7 @@ public class BreadthfirstSearchForGraphTrees {
         }
     } // heaviestTree()
 
+    // Dfs = depth first search
     void addDfs(LinkedList<Vertex> resultTree, Vertex start) {
         start.setColor(DiGraph.BLACK);
         resultTree.add(start);
@@ -316,20 +275,21 @@ public class BreadthfirstSearchForGraphTrees {
         }
     }
 
-    float puunPaino(Vertex start) {
-    	float puunPaino = 0;
+    float measureTreeWeight(Vertex start) {
+    	float weightOfTree = 0;
+    	//float puunPaino = 0;
     	start.setColor(DiGraph.BLACK);
         for (Edge e : start.edges()) {
             Vertex w = e.getEndPoint(start);
             if (w.getColor() == DiGraph.WHITE) {
-                puunPaino = puunPaino + e.getWeight();
-                puunPaino = puunPaino + puunPaino(w);
+            	weightOfTree = weightOfTree + e.getWeight();
+            	weightOfTree = weightOfTree + measureTreeWeight(w);
             }
         }
-        return puunPaino;
+        return weightOfTree;
         }
 
-  boolean eiPuu(Vertex start) {
+  boolean invalidTree(Vertex start) {  
 	start.setColor(DiGraph.GREY);
 	for (Vertex vertex : start.neighbors()) {
 		if (vertex.getColor() == DiGraph.GREY){
@@ -339,7 +299,7 @@ public class BreadthfirstSearchForGraphTrees {
 			return true;
 		}
 		else if (vertex.getColor() == DiGraph.WHITE) {
-			if(eiPuu(vertex)) {
+			if(invalidTree(vertex)) {
 				return true;
 			}
 		}
@@ -348,23 +308,20 @@ public class BreadthfirstSearchForGraphTrees {
 	return false;
 }
 
-    // Task 14.
     // Set of vertices with no incoming edge
     Set<Vertex> rootVertices(DiGraph g) {
 
         Set<Vertex> R = new Set<Vertex>();
 
-        // TODO
-
-        varita(g, DiGraph.WHITE);
-
-        // Varitetaan ei-juurisolmut mustaksi
+        colorTheGraph(g, DiGraph.WHITE);
+        
+        // We color the non-rootnodes black
         for (Vertex v : g.vertices()) {
             if (v.getColor() == 1);
             rootColorDfs(v);
         }
 
-        // Kerataan juurisolmut (valkoiset)
+        // Collecting rootnodes (nodes colored white)
         for (Vertex v : g.vertices()) {
             if (v.getColor() == 1) {
                 R.add(v);
@@ -384,13 +341,11 @@ public class BreadthfirstSearchForGraphTrees {
         }
     }
 
-    void varita(DiGraph G, int vari) {
+    void colorTheGraph(DiGraph G, int color) {
         for (Vertex v : G.vertices()) {
-            v.setColor(vari);
+            v.setColor(color);
         }
     }
-
-
 }   // class
 </pre>
 
