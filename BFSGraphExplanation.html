@@ -125,7 +125,35 @@ CODE EXPLAINED IN A QUICK MANNER:
 
 THE PARTS OF THE CODE THAT ARE MOST RELEVANT:
 
-
+    /**
+      * X1 Heaviest tree.
+      *
+      * X1. Write an algorithm that finds the heaviest tree component of a
+      * directed graph. The weight of a tree is the sum of the weights of its
+      * edges. A legitimate tree is a separate full component of a graph that
+      * has no back, forward, or cross edges (within the tree, or from
+      * outside). Algorithm returns the weight of the heaviest tree, or
+      * Float.NaN if there is not a single legitimate tree in the graph. The
+      * heaviest tree is also placed to the list of vertices given as a
+      * parameter, root as the first element of the list. What it the time
+      * complexity of your algorithm?
+      *
+      * Do not start coding (or touch the keyboard) before you have a proper
+      * plan and a working algorithm on paper. Make your solution modular,
+      * solve the problem in stages.
+      *
+      * Hints: You need to first find the potential root vertices in the graph,
+      * then check that the compo- nents of the roots really are distinct trees
+      * and calculate the weights of the trees. Take a skeleton and test
+      * program from course www-page. A partial solution is better than no
+      * solution. If you make a partial solution, write the self evaluation
+      * correspondingly.
+      *
+      * @param G the input directed graph
+      * @param resultTree an empty list to which resulting heaviest tree will be stored if found.
+      * @return Weight of the tree, or Float.NaN if no tree in graph.
+      **/
+	
     float heaviestTree(DiGraph G, LinkedList<Vertex> resultTree) {
     	
     	// Time complexity
