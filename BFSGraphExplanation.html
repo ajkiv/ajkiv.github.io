@@ -27,7 +27,7 @@
 </div>
 
 <pre>
-How to run the code:
+HOW TO RUN THE CODE
 
 download tra2017.jar, which contains the necessary custom libraries
 
@@ -43,7 +43,7 @@ From command-line to run: java -cp path/tra.jar Program.java
 Note: I had issues compiling the main program using this method, but no issues compiling and running using Eclipse. 
 
 
-Output of the code: 
+OUTPUT OF THE CODE:
 
 
 Graph:
@@ -112,9 +112,7 @@ Roots: [[5]]
 heaviestTree: NaN : []
 
 
-H1
-
-Code explained in a quick manner:
+CODE EXPLAINED IN A QUICK MANNER:
 
 -Goal: find the heaviest valid tree in a graph - trees weight is calculated by taking sum of its' edges
 -we first identify the root nodes from the graph
@@ -124,6 +122,8 @@ Code explained in a quick manner:
 -if there are root nodes of valid trees, we will then start searching for the heaviest tree. 
 -In the end, we return the heaviest tree with a list of the nodes included in this tree, or value NaN combined with empty list of nodes.
 
+
+THE PARTS OF THE CODE THAT ARE MOST RELEVANT:
 
 
     float heaviestTree(DiGraph G, LinkedList<Vertex> resultTree) {
