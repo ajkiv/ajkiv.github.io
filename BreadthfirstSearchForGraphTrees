@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bogosort in Perl</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+import fi.joensuu.cs.tra.*;
+
+
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.lang.RuntimeException;
+
+
+// skeleton and test program for X1 and 14.
+
+//       change class name and file name to your username, all lower case
+//           ||||||||||
+//           vvvvvvvvvv
+public class BreadthfirstSearchForGraphTrees {
+
+    public static void main(String[] args) {
+
+        // defaults
+        // testing with there values gives some idea, but is not
+        // exhaustive
+        int vertices = 8;
+        int edges = 8;
+
+        // first parameter: number of edges
+        if (args.length > 0)
+            vertices = Integer.valueOf(args[0]);
+
+        // second parameter: number of edges
+        if (args.length > 1)
+            edges = Integer.valueOf(args[1]);
+
+        int seed = vertices+edges;
+
+        // third parameter: random number seed
+        if (args.length > 2)
+            seed = Integer.valueOf(args[2]);
+
+
+        // change to your username also here
+        BreadthfirstSearchForGraphTrees y = new BreadthfirstSearchForGraphTrees();
+
+        // create random graph
+        DiGraph graph = GraphMaker.createDiGraph(vertices, edges, seed);
+        System.out.println("\nGraph:");
+
+        GraphMaker.setWeights(graph, 10, (float)0.1, seed);
+
+        // GraphMaker.toString(graph, 1) prints edges in form "d-w",
+        // where d is the destination vertex and w is weight of edge
+        if (edges < 20)
+            System.out.println(GraphMaker.toString(graph, 1));
+
+        System.out.println("Roots: " + y.rootVertices(graph));
+
+
+        LinkedList<Vertex> heaviest = new LinkedList<Vertex>();
+        float mw = y.heaviestTree(graph, heaviest);
+        System.out.println("heaviestTree: " + mw + " : " + heaviest);
+
+
+        // create directed acyclig graph
+        graph = GraphMaker.createDAG(vertices, edges, seed);
+        System.out.println("\nDAG:");
+
+        GraphMaker.setWeights(graph, 10, (float)0.1, seed);
+        if (edges < 20)
+            System.out.println(GraphMaker.toString(graph, 1));
+
+        System.out.println("Roots: " + y.rootVertices(graph));
+
+        heaviest = new LinkedList<Vertex>();
+        mw = y.heaviestTree(graph, heaviest);
+        System.out.println("heaviestTree: " + mw + " : " + heaviest);
+
+
+        // create forest, useful to use edges < vertices
+        graph = GraphMaker.createForest(vertices, edges, seed, 10);
+        System.out.println("\nForest:");
+
+        GraphMaker.setWeights(graph, 10, (float)0.1, seed);
+        if (edges < 20)
+            System.out.println(GraphMaker.toString(graph, 1));
+
+        System.out.println("Roots: " + y.rootVertices(graph));
+
+        heaviest = new LinkedList<Vertex>();
+        mw = y.heaviestTree(graph, heaviest);
+        System.out.println("heaviestTree: " + mw + " : " + heaviest);
+
+        // mess the forest
+
+        System.out.println("\nMessed forest 1");
+        GraphMaker.addRandomEdges(graph, 1, false, (float)10);
+        if (edges < 20)
+            System.out.println(GraphMaker.toString(graph, 1));
+
+        System.out.println("Roots: " + y.rootVertices(graph));
+
+
+        heaviest = new LinkedList<Vertex>();
+        mw = y.heaviestTree(graph, heaviest);
+        System.out.println("heaviestTree: " + mw + " : " + heaviest);
+
+        System.out.println("\nMessed forest 2");
+        GraphMaker.addRandomEdges(graph, 2, false, (float)10);
+
+        if (edges < 20)
+            System.out.println(GraphMaker.toString(graph, 1));
+
+        System.out.println("Roots: " + y.rootVertices(graph));
+
+        heaviest = new LinkedList<Vertex>();
+        mw = y.heaviestTree(graph, heaviest);
+        System.out.println("heaviestTree: " + mw + " : " + heaviest);
+
+
+        System.out.println();
+
+    } // main()
+
+
+
+
+
+    /**
+      * X1 Heaviest tree.
+      *
+      * X1. Write an algorithm that finds the heaviest tree component of a
+      * directed graph. The weight of a tree is the sum of the weights of its
+      * edges. A legitimate tree is a separate full component of a graph that
+      * has no back, forward, or cross edges (within the tree, or from
+      * outside). Algorithm returns the weight of the heaviest tree, or
+      * Float.NaN if there is not a single legitimate tree in the graph. The
+      * heaviest tree is also placed to the list of vertices given as a
+      * parameter, root as the first element of the list. What it the time
+      * complexity of your algorithm?
+      *
+      * Do not start coding (or touch the keyboard) before you have a proper
+      * plan and a working algorithm on paper. Make your solution modular,
+      * solve the problem in stages.
+      *
+      * Hints: You need to first find the potential root vertices in the graph,
+      * then check that the compo- nents of the roots really are distinct trees
+      * and calculate the weights of the trees. Take a skeleton and test
+      * program from course www-page. A partial solution is better than no
+      * solution. If you make a partial solution, write the self evaluation
+      * correspondingly.
+      *
+      * @param G the input directed graph
+      * @param resultTree an empty list to which resulting heaviest tree will be stored if found.
+      * @return Weight of the tree, or Float.NaN if no tree in graph.
+      **/
+    float heaviestTree(DiGraph G, LinkedList<Vertex> resultTree) {
+
+        // TODO
+
+        // DO NOT try to write everything here, it is not possible (or practical).
+        // Plan modular solution (several methods) according to your algorithm designed
+        // on paper.
+
+        // If you do not have a planned algorithm now, please shut down your computer and
+        // return to the drawing board.
+
+        // When you have the plan, follow it without making any unplanned hacks.
+        // If you need to add something, you must be able to reason it for yourself.
+
+    	// Ohjelma
+
+/**
+ * 	Itsearvio:
+ * Ohjelma tuntuu toimivan hyvin ja oikeellisesti. Olen huolissani
+ * ohjelmassani kohdasta, jossa poistan juurisolmut, joiden alla ei
+ * ole oikeaa puuta contains-operaatiolla: En ole täysin varma hoitaako
+ * kyseinen ohjelmapätkä tehtävänsä ongelmitta.
+ *
+ * Aikavaatimus:
+ * -n = solmujen lkm, e = kaarien lkm
+ * -Useita solmujen varityksia pohjavarilla: O(n)
+ * -rootVertices(DiGraph g):
+ *   >kaydaan kaikissa solmuissa, katsotaan kaikkien solmujen naapurit
+ *     >>O(n+e)
+ *   >lopuksi kerataan kaikki mustat solmut kaymalla kaikissa solmuissa
+ *     >>O(n)
+ * -Aitojen puiden selvitys
+ *   >juurisolmujen listan läpikäynti (kahdesti)
+ *     >>ei suurempi kuin O(n+e)
+ *   >ei-aitojen puiden juurisolmujen poisto:
+ *     >>Enintään O(n), yleisin tapaus O(1)
+ * -Raskaimman puun selvitys:
+ *   >juurisolmuista alkavien puiden läpikäynti kaarien avulla:
+ *     >>Enintään O(n+e)
+ *   >vertaukset ja sijoitukset
+ *     >>yksikköaikaa
+ * -Raskaimman puun rakentaminen LinkedListiin:
+ *   > aidoissa puissa vahan kaaria
+ *   > aidoissa puissa solmujen lukumaara todennakoisesti pienempi kuin n
+ *     >> ei raskas verrattuna raskaimpaan ohjelman osaan
+ * => Lopullinen aikavaatimus:
+ *    > isoin tekija on O(n+e) kohdassa rootVertices(DiGraph g)
+ *      >> Lopullinen aikavaatimus: O(n+e)
+ *
+ */
+    	float puuPaino = 0;
+        float maxPaino = 0;
+
+        LinkedList<Vertex> tempJuuri = new LinkedList<Vertex>();
+
+        LinkedList<Vertex> juuret1 = new LinkedList<Vertex>();
+        LinkedList<Vertex> juuret2 = new LinkedList<Vertex>();
+
+        Set<Vertex> juuriSolmut = new Set<Vertex>();
+
+        juuriSolmut = rootVertices(G);
+
+        juuret1.addAll(juuriSolmut);
+
+        // Kaydaan juurisolmujen lista jarjestyksessa lapi
+        // ensimmaisen kerran
+        varita(G, DiGraph.WHITE);
+        for (int nro = 0; nro < juuret1.size(); nro++) {
+        	if (eiPuu(juuret1.get(nro)) == true) {
+        		juuret2.add(juuret1.get(nro));
+        	}
+        }
+
+        // Kaydaan juurisolmujen lista lapi kaanteisessa jarjestyksessa,
+        // jotta loydetaan puut joissa 2 juurta
+        varita(G, DiGraph.WHITE);
+        for (int nro = 0; nro < juuret1.size(); nro++) {
+        	if (eiPuu(juuret1.get((juuret1.size()-1)-nro))== true) {
+        		juuret2.add(juuret1.get(nro));
+        	}
+        }
+
+        //Poistetaan juurisolmujen listalta solmut joiden alla ei aitoa puuta
+        for (int nro = 0; nro < juuret1.size(); nro++) {
+            if (juuret2.contains(juuret1.get(nro))) {
+                juuret1.remove(nro);
+            }
+        }
+
+        //Poistetaan juurisolmujen listalta solmut joiden alla ei aitoa puuta
+        for (int nro = 0; nro < juuret1.size(); nro++) {
+            if (juuret2.contains(juuret1.get(nro))) {
+                juuret1.remove(nro);
+            }
+        }
+
+        // jos juurisolmuja jaljella, aletaan tutkimaan mika raskain puu
+        if (juuret1.peekFirst() != null) {
+            // tutkitaan mika puu raskain
+            for (int nro = 0; nro < juuret1.size(); nro++) {
+                varita(G, DiGraph.WHITE);
+                puuPaino = (puunPaino(juuret1.get(nro)));
+                if (puuPaino > maxPaino) {
+                    maxPaino = puuPaino;
+                    tempJuuri.clear();
+                    tempJuuri.add(juuret1.get(nro));
+                }
+            }
+            // rakennetaan LinkedList raskaimmalle puulle
+            varita(G, DiGraph.WHITE);
+
+            //mikali ainoa puu on juuren kokoinen
+            if (tempJuuri.peekFirst() == null) {
+            	resultTree.add(juuret1.peekFirst());
+            	return maxPaino;
+            }
+            else {
+              addDfs(resultTree, tempJuuri.get(0));
+              return maxPaino;
+            }
+        }
+
+        else {
+            return Float.NaN;
+        }
+    } // heaviestTree()
+
+    void addDfs(LinkedList<Vertex> resultTree, Vertex start) {
+        start.setColor(DiGraph.BLACK);
+        resultTree.add(start);
+        for (Vertex n : start.neighbors()) {
+            if (n.getColor() == DiGraph.WHITE) {
+                addDfs(resultTree, n);
+            }
+        }
+    }
+
+    float puunPaino(Vertex start) {
+    	float puunPaino = 0;
+    	start.setColor(DiGraph.BLACK);
+        for (Edge e : start.edges()) {
+            Vertex w = e.getEndPoint(start);
+            if (w.getColor() == DiGraph.WHITE) {
+                puunPaino = puunPaino + e.getWeight();
+                puunPaino = puunPaino + puunPaino(w);
+            }
+        }
+        return puunPaino;
+        }
+
+  boolean eiPuu(Vertex start) {
+	start.setColor(DiGraph.GREY);
+	for (Vertex vertex : start.neighbors()) {
+		if (vertex.getColor() == DiGraph.GREY){
+			return true;
+		}
+		else if (vertex.getColor() == DiGraph.BLACK) {
+			return true;
+		}
+		else if (vertex.getColor() == DiGraph.WHITE) {
+			if(eiPuu(vertex)) {
+				return true;
+			}
+		}
+	}
+	start.setColor(Graph.BLACK);
+	return false;
+}
+
+    // Task 14.
+    // Set of vertices with no incoming edge
+    Set<Vertex> rootVertices(DiGraph g) {
+
+        Set<Vertex> R = new Set<Vertex>();
+
+        // TODO
+
+        varita(g, DiGraph.WHITE);
+
+        // Varitetaan ei-juurisolmut mustaksi
+        for (Vertex v : g.vertices()) {
+            if (v.getColor() == 1);
+            rootColorDfs(v);
+        }
+
+        // Kerataan juurisolmut (valkoiset)
+        for (Vertex v : g.vertices()) {
+            if (v.getColor() == 1) {
+                R.add(v);
+            }
+        }
+
+        return R;
+    }   // rootVertices()
+
+
+    void rootColorDfs(Vertex start) {
+        for (Vertex n : start.neighbors()) {
+            if (n.getColor() == 1) {
+                n.setColor(2);
+                rootColorDfs(n);
+            }
+        }
+    }
+
+    void varita(DiGraph G, int vari) {
+        for (Vertex v : G.vertices()) {
+            v.setColor(vari);
+        }
+    }
+
+
+}   // class
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
