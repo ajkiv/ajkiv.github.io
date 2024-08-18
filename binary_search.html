@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Python Binary Search</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+import random
+
+def main():
+    # Parameters for creating an array of unsorted numbers
+    size = 20  # Number of random numbers
+    lower_bound = 1  # Minimum value
+    upper_bound = 100  # Maximum value
+    
+    # Generate a random list
+    unsorted_array = generate_random_numbers(size, lower_bound, upper_bound)
+
+    # Print the generated random numbers
+    print("Unsorted array of random numbers: ", unsorted_array)
+    
+    # Pick the value to be searched for later:
+    target = unsorted_array[0]
+    #target = 101
+    
+    # Sort the generated list
+    sorted_array2 = selection_sort(unsorted_array)
+
+    # Print the sorted array of random numbers
+    print("Sorted array of random numbers: ", sorted_array2)
+
+    # Search for target in the sorted array
+    index_of_target = binary_search(sorted_array2, target)
+
+    if(index_of_target == -1):
+        print("Target not found.")
+    else:
+        print(str(target) + " is found at index: " + str(index_of_target) + " in the sorted array.")
+
+def binary_search(arr, target):
+    left = 0 # Element in the leftmost side of the array
+    right = len(arr) - 1  # Element in the rightmost side of the array
+
+    while left <= right:
+        mid = left + (right - left) // 2 # Finding the mid index using the floor-division operator
+
+        if arr[mid] == target:
+            return mid # return index of the found target
+        elif arr[mid] < target:
+            left = mid + 1 # Target is in the right half of the array
+        else:
+            right = mid - 1 # Target is in the left half of the array
+
+    return -1  # Target not found
+
+def generate_random_numbers(size, lower_bound, upper_bound):
+    return [random.randint(lower_bound, upper_bound) for _ in range(size)]
+
+def selection_sort(arr):
+    # comments removed because this part is not the focus of this demo.
+    n = len(arr)
+    
+    for i in range(n):
+        min_index = i
+        
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        
+        if min_index != i:  
+            swap(arr, i, min_index)
+
+    return arr
+
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
+
+if __name__ == "__main__":
+    main()
+
+# Example run:
+#
+# Unsorted array of random numbers:  [57, 51, 2, 4, 53, 69, 5, 47, 57, 29, 65, 47, 83, 13, 83, 66, 72, 55, 53, 7]
+# Sorted array of random numbers:  [2, 4, 5, 7, 13, 29, 47, 47, 51, 53, 53, 55, 57, 57, 65, 66, 69, 72, 83, 83]
+# 57 is found at index: 12 in the sorted array.
+
+# Time complexity of binary_search:
+¨#
+# Average case: O(log n)
+# Worst case: O(log n) (Target is not in the list or it is found at beginning or at end of the list)
+# Best case: O(1) (Target is the middle element)
+
+
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
