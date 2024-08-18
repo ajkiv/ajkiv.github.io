@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Python Selection Sort</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+import random
+
+def main():
+    # Parameters for creating an array of unsorted numbers
+    size = 10  # Number of random numbers
+    lower_bound = 1  # Minimum value
+    upper_bound = 100  # Maximum value
+    
+    # Generate the random list
+    unsorted_array = generate_random_numbers(size, lower_bound, upper_bound)
+
+    # Print the generated random numbers
+    print("Unsorted array of random numbers: ", unsorted_array)
+
+    sorted_array = selection_sort(unsorted_array)
+    
+    # Print the array that was sorted
+    print("Sorted Array:", sorted_array)
+
+def selection_sort(arr):    
+    # Get the length of the array
+    n = len(arr)
+    
+    # Traverse through all array elements
+    for i in range(n):
+        # Assume the first element of the unsorted section is the minimum
+        min_index = i
+        
+        # Check the elements in the unsorted section
+        for j in range(i + 1, n):
+            # Update the index of the minimum element if a smaller element is found
+            if arr[j] < arr[min_index]:
+                min_index = j
+        
+        # Swap the smallest found element with the first element of the unsorted section
+        if min_index != i:  # Only swap if a new minimum was found
+            swap1(arr, i, min_index)
+
+    return arr
+
+def swap1(arr, i, j):
+    # Swaps the elements at index i and j in the array.
+    arr[i], arr[j] = arr[j], arr[i]
+
+def swap2(arr, i, j):
+    # Swaps the elements at index i and j in the array.
+    temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+
+# Function to generate a list of random unsorted numbers
+def generate_random_numbers(size, lower_bound, upper_bound):
+    return [random.randint(lower_bound, upper_bound) for _ in range(size)]
+
+if __name__ == "__main__":
+    main()
+
+# Example run:
+#
+# Unsorted array of random numbers:  [91, 49, 21, 87, 12, 21, 54, 43, 6, 50]
+# Sorted Array: [6, 12, 21, 21, 43, 49, 50, 54, 87, 91]
+
+# Time complexity:
+# Best case: O(n) (checks the list through even if the list is already sorted)
+# Average case: O(n)
+# Worst case: O(n) (List in reverse order, but number of comparisons remains the same)
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
