@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="styles.css">
-  <title>Bubble Sort in Perl</title>
+  <title>Perl Bubble Sort</title>
 <style>
 pre {
   padding-left: 10px
@@ -33,6 +33,7 @@ use strict;
 
 # 'Bubble Sort optimized' -algorithm
 # Code written by Antti Kiviniemi, 2022 
+# Updated 19-8-24
 
 
 # array of numbers between 1-9 in random order
@@ -69,37 +70,37 @@ print("Array ", '@test3', ": ", "\n", "@test3", "\n");
 
 print("Array ", '@sorted_test3', ": ", "\n", "@sorted_test3", "\n");
 
-sub bubble_sort{
-  # Create a temporary array
-  my @tmpArray = @_;
-  
-  # variable for holding the length of the array
-  my $n = @tmpArray;
-  
-  # Scalar variable for holding values temporarily
-  my $temp;
-  
-  # break condition
-  my $swapped = 1;
-  
-  for(my $i =0; $i < ($n - 1); $i++) {
-	  $swapped = 0;
-	  # last i elements are already in place
-	  for (my $j = 0; $j < ($n - $i - 1); $j++) {
-        if ($tmpArray[$j] > $tmpArray[($j + 1)]) {
-		    # swap
-			$temp = $tmpArray[($j + 1)];
-			$tmpArray[($j + 1)] = $tmpArray[$j];
-			$tmpArray[$j] = $temp;
-			
-			# Remember a swap has occurred
-			$swapped = 1;
-		}
-	  }
-	  # break out of the outer loop if no swaps occur in the inner loop
-	  last if($swapped == 0);
-  }
-  return @tmpArray;
+sub bubble_sort {
+    # Create a temporary array
+    my @tmpArray = @_;
+    
+    # Variable for holding the length of the array
+    my $n = @tmpArray;
+    
+    # Scalar variable for holding values temporarily
+    my $temp;
+    
+    # Break condition
+    my $swapped = 1;
+    
+    for (my $i = 0; $i < ($n - 1); $i++) {
+        $swapped = 0;
+        # Last i elements are already in place
+        for (my $j = 1; $j < ($n - $i); $j++) {  # Start from 1
+            if ($tmpArray[$j - 1] > $tmpArray[$j]) {  # Compare adjacent elements
+                # Swap
+                $temp = $tmpArray[$j];
+                $tmpArray[$j] = $tmpArray[$j - 1];
+                $tmpArray[$j - 1] = $temp;
+                
+                # Remember a swap has occurred
+                $swapped = 1;
+            }
+        }
+        # Break out of the outer loop if no swaps occur in the inner loop
+        last if ($swapped == 0);
+    }
+    return @tmpArray;
 }
 
 # Time complexity:
