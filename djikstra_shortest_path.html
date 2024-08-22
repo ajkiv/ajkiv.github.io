@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!-- if Finnish: fi-Fi -->
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Python Djikstra</title>
+<style>
+  pre {
+    padding-left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav" id="myTopnav">
+  <a href="index.html"><i class ="fa fa-fw fa-home"></i>Home</a>
+  <a href="itskills.html"><i class="fa fa-fw fa-laptop"></i>IT Skills</a>
+  <a href="projects.html"><i class="fa fa-fw fa-briefcase"></i>Projects</a>
+  <a href="hobbies.html"><i class="fa fa-fw fa-heart"></i>Hobbies</a>
+  <a href="contact.html"><i class="fa fa-fw fa-envelope"></i>Contact</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<pre>
+import heapq
+
+from typing import Dict, List, Tuple, Union
+
+
+def main():
+    # Example graph represented as an adjacency list
+    graph = {
+        'A': [('B', 1), ('C', 4)],
+        'B': [('A', 1), ('C', 2), ('D', 5)],
+        'C': [('A', 4), ('B', 2), ('D', 1)],
+        'D': [('B', 5), ('C', 1)],
+    }
+
+    # Print the graph
+    print("Graph representation:")
+    for node, edges in graph.items():
+        print(f"{node}: {edges}")
+
+
+    # Running Dijkstra's algorithm from starting node 'A'
+    try:
+        shortest_paths = dijkstra_shortest_path(graph, 'A')
+        print("Shortest paths from node A:")
+        # improving the formatting of shortest_paths. The old formatting could be used as is without formatting.
+        for node, info in shortest_paths.items():
+            print(f"Node: {node}, Distance: {info['distance']}, Previous: {info['previous']}")
+    except ValueError as e:
+        print("Error:", e)
+
+
+# Parameters: 
+# -graph (Dict[str, List[Tuple[str, int]]]) - represent the adjacency list of the graph, 
+#  where node names are connected to pairs of (neighbor, weight) pairs.
+# -start: the starting node from which to calculate shortest paths
+# Return:
+# -a dictionary with nodes as keys and a dictionary as values, containing the shortest
+#  distance to the node and the previous node on the shortest path.
+def dijkstra_shortest_path(graph: Dict[str, List[Tuple[str, int]]], start: str) -> Dict[str, Dict[str, Union[float, str]]]:
+    
+    # Create a priority queue
+    priority_queue = []
+    
+    # Initialize distances with infinity and initialize previous nodes
+    distances = {node: {'distance': float('infinity'), 'previous': None} for node in graph}
+    
+    # Set the distance to the start node to 0
+    distances[start]['distance'] = 0
+    
+    # Push the start node into the priority queue
+    # Using minimum-heap datastructure, where smallest element is always at the root
+    # (0, start) where 0 is the distance of the starting node to itself
+    # heappush adds an element to the heap while maintaining heap-property, where smallest is at the root
+    # Now we have starting node in the priority_que, and we can use it in the first while-loop -iteration
+    heapq.heappush(priority_queue, (0, start))
+    
+    while priority_queue:
+        # Get the node with the smallest distance (start-node in the first iteration)
+        # removes node with the lowest distance from the priority que and assigns its values to 
+        # current_distance and current_node (e.g. 0 and A)
+        # Another example: priority_queue = [(2, 'B'), (5, 'C'), (3, 'D')]
+        # heappop would give 2 and B
+        current_distance, current_node = heapq.heappop(priority_queue)
+
+        # If the distance is greater than the recorded distance, skip processing
+        # determine whether the current distance obtained from the priority queue
+        # is already worse than a previously recorded distance for the same node
+        # distances[current_node]['distance'] returns the 'distance' of the current node 
+        # e.g. we are at starting node A - 0, it returns 0.
+        if current_distance > distances[current_node]['distance']:
+            continue
+
+        # Explore the neighbors of the current node
+        for neighbor, weight in graph[current_node]:
+            # distance from starting node to current node to neighboring node
+            # because current_distance always represents shortest distance from starting node.
+            # e.g. at B we have neighbors (A, 1), (C, 2), and (D, 5)
+            distance = current_distance + weight
+            
+            # Only consider this path if it's better
+            # if distance is shorter, then a shorter path to neighbor has been found via current_node
+            # e.g. distance from B to A, 1, is bigger than 0, we skip 
+            #      distance from B to C (current_distance, 1 + weight, 2) is 3, this is smaller than 4
+            #      => we update the distance to say distance to C is 3
+            #      => update the previous node to C to be B
+            #      then 
+            if distance < distances[neighbor]['distance']:
+                # update the distance to match the new shortest distance
+                distances[neighbor]['distance'] = distance
+                
+                distances[neighbor]['previous'] = current_node  # Update the previous node
+                # update the distances in the priority_queue. Because it uses heap-structure,
+                # the queue remains in order after update.
+                # the values at C are overwritten and pushed to the heap
+                # but the old C (4, C) that was originally pushed into the heap still remains.
+                # this (4, C) will get popped at a later 'while priority_queue:' iteration
+                # because when a node enters into the while-loop, the node gets popped:
+                # 'current_distance, current_node = heapq.heappop(priority_queue)' and 
+                # because the distances at (4, C) are inferior, it wont pass the 'if'-check
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    return distances
+    
+    
+if __name__ == '__main__':
+    main()
+
+# Time Complexity:
+# 
+# Summary:
+# O(E + V log V)
+# where E = edges, V = vertices (nodes)
+# 
+# In dense graph where a lot of edge connections between nodes, 
+# there might be V^2 number of edges, making the O(E) part of the equation the heavier part
+#
+# Components of the algorithm:
+# Set initial distances to each vertex: O(V)
+# Priority que push & pop: O(log V)
+# Each vertex is processed once, O(V), combined with priority que operations O(V log V)
+# For each vertex, all outgoing edges are examined O(E)
+# Total time: O(V log V) + O(E) = O(E + V log V)
+
+# Example run of the program:
+#
+# Graph representation:
+# A: [('B', 1), ('C', 4)]
+# B: [('A', 1), ('C', 2), ('D', 5)]
+# C: [('A', 4), ('B', 2), ('D', 1)]
+# D: [('B', 5), ('C', 1)]
+# Shortest paths from node A:
+# Node: A, Distance: 0, Previous: None
+# Node: B, Distance: 1, Previous: A
+# Node: C, Distance: 3, Previous: B
+# Node: D, Distance: 4, Previous: C
+</pre>
+
+<script src="app.js"></script>
+</body>
+</html>
