@@ -109,7 +109,11 @@ public class QuickSortMedianPivot {
 //      reduced depth of recursion,
 //      but the Ordo-complexities in all 3 cases (best, average, worst) remain the same.
 
-// space complexity: O()log(n)) because of recursion
+// space complexity: 
+// Average case and best case: O(log n) because of recursion
+// Worst case: O(n) 
+// Worst-case space complexity occurs when partitions are highly unbalanced (e.g., sorted array),
+// leading to a recursion depth of O(n) and thus O(n) space usage.
 </pre>
 
 <script src="app.js"></script>
