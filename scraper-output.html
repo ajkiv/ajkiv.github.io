@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Scraper — Example Output</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #11161d;
+    --border: #232b36;
+    --text: #c9d1d9;
+    --muted: #7d8590;
+    --accent: #5fb3a3;
+    --key: #79c0ff;
+    --string: #a5d6ff;
+    --ok: #5fb3a3;
+    --warn: #d9a441;
+    --err: #e5636b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 2.5rem 1.25rem;
+    background: #f5f4f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c1c1c;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+  }
+
+  .lede {
+    font-size: 0.92rem;
+    color: #55524c;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+    max-width: 58ch;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    background: #0b0f14;
+  }
+
+  .panel-head .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #30363d;
+  }
+
+  .panel-title {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .k { color: var(--key); }
+  .s { color: var(--string); }
+  .punct { color: var(--muted); }
+
+  .caption {
+    font-size: 0.83rem;
+    color: #55524c;
+    line-height: 1.55;
+    margin: 0.9rem 0 1.6rem;
+    padding: 0.7rem 0.9rem;
+    background: #eeece4;
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+
+  details {
+    border: 1px solid #ddd8ca;
+    border-radius: 10px;
+    background: #fbfaf6;
+    overflow: hidden;
+  }
+
+  summary {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1c1c1c;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "▶";
+    font-size: 0.65rem;
+    color: var(--accent);
+    transition: transform 0.15s ease;
+  }
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+  summary:hover { background: #f2f0e6; }
+
+  details .panel {
+    margin: 0;
+    border: none;
+    border-top: 1px solid #ddd8ca;
+    border-radius: 0;
+  }
+
+  .log {
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 1rem 1.1rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+  }
+
+  .ok { color: var(--ok); }
+  .warn { color: var(--warn); }
+  .err { color: var(--err); }
+  .dim { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h2>Example Output</h2>
+  <p class="lede">A sample run of <code>main.ts</code> against a mixed list of URLs — news sites, a blog, and Wikipedia. Two entries from the result set:</p>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">result.json (excerpt)</span>
+      <div class="dots"><span></span><span></span><span></span></div>
+    </div>
+<pre><span class="punct">[</span>
+  <span class="punct">{</span>
+    <span class="k">"url"</span><span class="punct">:</span> <span class="s">"https://en.wikipedia.org/wiki/Cat"</span><span class="punct">,</span>
+    <span class="k">"title"</span><span class="punct">:</span> <span class="s">"Cat - Wikipedia"</span><span class="punct">,</span>
+    <span class="k">"image"</span><span class="punct">:</span> <span class="s">"https://upload.wikimedia.org/.../Cat_August_2010-4.jpg"</span><span class="punct">,</span>
+    <span class="k">"site_name"</span><span class="punct">:</span> <span class="s">"unable to retrieve"</span><span class="punct">,</span>
+    <span class="k">"author"</span><span class="punct">:</span> <span class="s">"unable to retrieve"</span>
+  <span class="punct">},</span>
+  <span class="punct">{</span>
+    <span class="k">"url"</span><span class="punct">:</span> <span class="s">"https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/"</span><span class="punct">,</span>
+    <span class="k">"title"</span><span class="punct">:</span> <span class="s">"Oracle promotes two presidents to co-CEO role | TechCrunch"</span><span class="punct">,</span>
+    <span class="k">"site_name"</span><span class="punct">:</span> <span class="s">"TechCrunch"</span><span class="punct">,</span>
+    <span class="k">"author"</span><span class="punct">:</span> <span class="s">"Rebecca Szkutak"</span><span class="punct">,</span>
+    <span class="k">"published_time"</span><span class="punct">:</span> <span class="s">"2025-09-22T16:45:19+00:00"</span>
+  <span class="punct">}</span>
+<span class="punct">]</span></pre>
+  </div>
+
+  <p class="caption">
+    5 of 7 URLs scraped successfully. BBC and NYT blocked the request with a 403 — rather than crashing, the scraper falls back to a structured <code>"unable to retrieve"</code> payload for every field, so the output shape stays consistent even on failure. Full terminal log below.
+  </p>
+
+  <details>
+    <summary>View full terminal output</summary>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">$ npx tsx main.ts</span>
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="log">$ npx tsx main.ts
+Scraper starting...
+Links to scrape: [
+  'https://www.bbc.com/news/science-environment-66786611',
+  'https://www.theverge.com/report/782952/ai-electricity-demand-inflated-forecast-report',
+  'https://en.wikipedia.org/wiki/Cat',
+  'https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/',
+  'https://dev.to/matfire/making-an-rss-feed-for-a-nuxt-website-3jab',
+  'https://iamcat.blog/',
+  'https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html'
+]
+<span class="dim">INFO</span>  CheerioCrawler: Starting the crawler.
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Visited: https://www.theverge.com/report/782952/ai-electricity-demand-inflated-forecast-report
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Scraped: https://www.theverge.com/report/782952/ai-electricity-demand-inflated-forecast-report
+<span class="warn">WARN</span>  CheerioCrawler: Reclaiming failed request back to the list or queue. Request blocked - received 403 status code.
+ {"id":"u2oaiBr4ndJIVVA","url":"https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html","retryCount":1}
+<span class="warn">WARN</span>  CheerioCrawler: Reclaiming failed request back to the list or queue. Request blocked - received 403 status code.
+ {"id":"u2oaiBr4ndJIVVA","url":"https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html","retryCount":2}
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Visited: https://dev.to/matfire/making-an-rss-feed-for-a-nuxt-website-3jab
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Scraped: https://dev.to/matfire/making-an-rss-feed-for-a-nuxt-website-3jab
+<span class="err">ERROR</span> CheerioCrawler: Request failed and reached maximum retries. Error: Request blocked - received 403 status code.
+    at CheerioCrawler._throwOnBlockedRequest (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/basic/internals/basic-crawler.js:954:19)
+    at CheerioCrawler._runRequestHandler (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/http/internals/http-crawler.js:324:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async CheerioCrawler._runRequestHandler (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/cheerio/internals/cheerio-crawler.js:155:9)
+    at wrap (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@apify/src/index.ts:94:27) {"id":"u2oaiBr4ndJIVVA","url":"https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html","method":"GET","uniqueKey":"https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html-1786261271645"}
+<span class="warn">WARN</span>  CheerioCrawler: The 'error' property of the crawling context is deprecated, and it is now passed as the second parameter in 'errorHandler' and 'failedRequestHandler'. Please update your code, as this property will be removed in a future version.
+<span class="warn">WARN</span>  CheerioCrawler: ❌ Final failure for https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html: Request blocked - received 403 status code.
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Visited: https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Scraped: https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Visited: https://en.wikipedia.org/wiki/Cat
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Scraped: https://en.wikipedia.org/wiki/Cat
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Visited: https://iamcat.blog/
+<span class="ok">INFO</span>  CheerioCrawler: ✅ Scraped: https://iamcat.blog/
+<span class="warn">WARN</span>  CheerioCrawler: Reclaiming failed request back to the list or queue. Request blocked - received 403 status code.
+ {"id":"6xCFEyautIDcs68","url":"https://www.bbc.com/news/science-environment-66786611","retryCount":1}
+<span class="warn">WARN</span>  CheerioCrawler: Reclaiming failed request back to the list or queue. Request blocked - received 403 status code.
+ {"id":"6xCFEyautIDcs68","url":"https://www.bbc.com/news/science-environment-66786611","retryCount":2}
+<span class="err">ERROR</span> CheerioCrawler: Request failed and reached maximum retries. Error: Request blocked - received 403 status code.
+    at CheerioCrawler._throwOnBlockedRequest (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/basic/internals/basic-crawler.js:954:19)
+    at CheerioCrawler._runRequestHandler (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/http/internals/http-crawler.js:324:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async CheerioCrawler._runRequestHandler (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/cheerio/internals/cheerio-crawler.js:155:9)
+    at wrap (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@apify/src/index.ts:94:27) {"id":"6xCFEyautIDcs68","url":"https://www.bbc.com/news/science-environment-66786611","method":"GET","uniqueKey":"https://www.bbc.com/news/science-environment-66786611-1786261271645"}
+<span class="warn">WARN</span>  CheerioCrawler: ❌ Final failure for https://www.bbc.com/news/science-environment-66786611: Request blocked - received 403 status code.
+<span class="dim">INFO</span>  CheerioCrawler: All requests from the queue have been processed, the crawler will shut down.
+<span class="dim">INFO</span>  CheerioCrawler: Final request statistics: {"requestsFinished":5,"requestsFailed":2,"retryHistogram":[5,null,2],"requestAvgFailedDurationMillis":2686,"requestAvgFinishedDurationMillis":1579,"requestsFinishedPerMinute":18,"requestsFailedPerMinute":7,"requestTotalDurationMillis":13268,"requestsTotal":7,"crawlerRuntimeMillis":16336}
+<span class="dim">INFO</span>  CheerioCrawler: Error analysis: {"totalErrors":2,"uniqueErrors":1,"mostCommonErrors":["2x: Request blocked - received 403 status code. (/home/ml-ak/a17/data-scraper-portfolio/data-scraper/node_modules/@crawlee/basic/internals/basic-crawler.js:954:19)"]}
+<span class="dim">INFO</span>  CheerioCrawler: Finished! Total 7 requests: 5 succeeded, 2 failed. {"terminal":true}
+✅ Crawler teardown finished
+📦 Final ordered JSON payload:
+[
+  {
+    "url": "https://www.bbc.com/news/science-environment-66786611",
+    "site_name": "unable to retrieve",
+    "title": "unable to retrieve",
+    "description": "unable to retrieve",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  },
+  {
+    "url": "https://www.theverge.com/report/782952/ai-electricity-demand-inflated-forecast-report",
+    "site_name": "The Verge",
+    "title": "The AI-energy apocalypse might be a little overblown",
+    "description": "“Speculators are flooding the market.”",
+    "image": "https://platform.theverge.com/wp-content/uploads/sites/2/2025/09/gettyimages-2190030422.jpg?quality=90&strip=all&crop=0%2C10.732984293194%2C100%2C78.534031413613&w=1200",
+    "image_alt": "Equinix Data Center",
+    "author": "Justine Calma",
+    "published_time": "2025-09-22T23:12:56+00:00"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Cat",
+    "site_name": "unable to retrieve",
+    "title": "Cat - Wikipedia",
+    "description": "unable to retrieve",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1280px-Cat_August_2010-4.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  },
+  {
+    "url": "https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/",
+    "site_name": "TechCrunch",
+    "title": "Oracle promotes two presidents to co-CEO role | TechCrunch",
+    "description": "Oracle is shaking up its executive suite as it sets its sights on AI infrastructure dominance. The company announced Monday that it is promoting Clay Magouyrk and Mike Sicilia to co-CEO roles.  ",
+    "image": "https://techcrunch.com/wp-content/uploads/2015/09/456307736.jpg?resize=1200,800",
+    "image_alt": "unable to retrieve",
+    "author": "Rebecca Szkutak",
+    "published_time": "2025-09-22T16:45:19+00:00"
+  },
+  {
+    "url": "https://dev.to/matfire/making-an-rss-feed-for-a-nuxt-website-3jab",
+    "site_name": "DEV Community",
+    "title": "Making an RSS Feed for a Nuxt Website",
+    "description": "learn what an rss feed is and how to build one for Nuxt website",
+    "image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fxrszbn62yh2nhbvt4s5v.png",
+    "image_alt": "unable to retrieve",
+    "author": "@",
+    "published_time": "2025-09-22T15:11:18Z"
+  },
+  {
+    "url": "https://iamcat.blog/",
+    "site_name": "I am Cat",
+    "title": "I am Cat",
+    "description": "This blog will answer all your questions about cats",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "2023-03-26T08:21:59+00:00"
+  },
+  {
+    "url": "https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html",
+    "site_name": "unable to retrieve",
+    "title": "unable to retrieve",
+    "description": "unable to retrieve",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  }
+]
+📦 Final filtered results JSON payload:
+[
+  {
+    "url": "https://www.bbc.com/news/science-environment-66786611",
+    "site_name": "unable to retrieve",
+    "title": "unable to retrieve",
+    "description": "unable to retrieve",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  },
+  {
+    "url": "https://www.theverge.com/report/782952/ai-electricity-demand-inflated-forecast-report",
+    "site_name": "The Verge",
+    "title": "The AI-energy apocalypse might be a little overblown",
+    "description": "“Speculators are flooding the market.”",
+    "image": "https://platform.theverge.com/wp-content/uploads/sites/2/2025/09/gettyimages-2190030422.jpg?quality=90&strip=all&crop=0%2C10.732984293194%2C100%2C78.534031413613&w=1200",
+    "image_alt": "Equinix Data Center",
+    "author": "Justine Calma",
+    "published_time": "2025-09-22T23:12:56+00:00"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Cat",
+    "site_name": "unable to retrieve",
+    "title": "Cat - Wikipedia",
+    "description": "unable to retrieve",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Cat_August_2010-4.jpg/1280px-Cat_August_2010-4.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  },
+  {
+    "url": "https://techcrunch.com/2025/09/22/oracle-promotes-two-presidents-to-co-ceo-role/",
+    "site_name": "TechCrunch",
+    "title": "Oracle promotes two presidents to co-CEO role | TechCrunch",
+    "description": "Oracle is shaking up its executive suite as it sets its sights on AI infrastructure dominance. The company announced Monday that it is promoting Clay Magouyrk and Mike Sicilia to co-CEO roles.  ",
+    "image": "https://techcrunch.com/wp-content/uploads/2015/09/456307736.jpg?resize=1200,800",
+    "image_alt": "unable to retrieve",
+    "author": "Rebecca Szkutak",
+    "published_time": "2025-09-22T16:45:19+00:00"
+  },
+  {
+    "url": "https://dev.to/matfire/making-an-rss-feed-for-a-nuxt-website-3jab",
+    "site_name": "DEV Community",
+    "title": "Making an RSS Feed for a Nuxt Website",
+    "description": "learn what an rss feed is and how to build one for Nuxt website",
+    "image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fxrszbn62yh2nhbvt4s5v.png",
+    "image_alt": "unable to retrieve",
+    "author": "@",
+    "published_time": "2025-09-22T15:11:18Z"
+  },
+  {
+    "url": "https://iamcat.blog/",
+    "site_name": "I am Cat",
+    "title": "I am Cat",
+    "description": "This blog will answer all your questions about cats",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "2023-03-26T08:21:59+00:00"
+  },
+  {
+    "url": "https://www.nytimes.com/2025/09/22/world/middleeast/unga-palestinian-state.html",
+    "site_name": "unable to retrieve",
+    "title": "unable to retrieve",
+    "description": "unable to retrieve",
+    "image": "unable to retrieve",
+    "image_alt": "unable to retrieve",
+    "author": "unable to retrieve",
+    "published_time": "unable to retrieve"
+  }
+]
+Scraper finished.</div>
+    </div>
+  </details>
+
+</div>
+</body>
+</html>
