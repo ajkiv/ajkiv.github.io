@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NCSC Email Parser — Example Output</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #11161d;
+    --border: #232b36;
+    --text: #c9d1d9;
+    --muted: #7d8590;
+    --accent: #5fb3a3;
+    --key: #79c0ff;
+    --string: #a5d6ff;
+    --ok: #5fb3a3;
+    --warn: #d9a441;
+    --err: #e5636b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 2.5rem 1.25rem;
+    background: #f5f4f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1c1c1c;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.35rem;
+  }
+
+  .lede {
+    font-size: 0.92rem;
+    color: #55524c;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+    max-width: 58ch;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    background: #0b0f14;
+  }
+
+  .panel-head .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #30363d;
+  }
+
+  .panel-title {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .k { color: var(--key); }
+  .s { color: var(--string); }
+  .punct { color: var(--muted); }
+
+  .caption {
+    font-size: 0.83rem;
+    color: #55524c;
+    line-height: 1.55;
+    margin: 0.9rem 0 1.6rem;
+    padding: 0.7rem 0.9rem;
+    background: #eeece4;
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+
+  details {
+    border: 1px solid #ddd8ca;
+    border-radius: 10px;
+    background: #fbfaf6;
+    overflow: hidden;
+  }
+
+  summary {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1c1c1c;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    user-select: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "▶";
+    font-size: 0.65rem;
+    color: var(--accent);
+    transition: transform 0.15s ease;
+  }
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+  summary:hover { background: #f2f0e6; }
+
+  details .panel {
+    margin: 0;
+    border: none;
+    border-top: 1px solid #ddd8ca;
+    border-radius: 0;
+  }
+
+  .log {
+    max-height: 480px;
+    overflow-y: auto;
+    padding: 1rem 1.1rem;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+  }
+
+  .ok { color: var(--ok); }
+  .warn { color: var(--warn); }
+  .err { color: var(--err); }
+  .dim { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h2>Example Output</h2>
+  <p class="lede">A sample run of <code>ncsc_forward.py</code> connecting to an IMAP mailbox, parsing the latest NCSC-FI vulnerability digest, and forwarding it to <code>test_receiver.py</code> as JSON. Parsed payload:</p>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">payload.json (excerpt)</span>
+      <div class="dots"><span></span><span></span><span></span></div>
+    </div>
+<pre><span class="punct">{</span>
+  <span class="k">"from"</span><span class="punct">:</span> <span class="s">"ncsc-fi-newsbot@TRAFICOM.FI"</span><span class="punct">,</span>
+  <span class="k">"subject"</span><span class="punct">:</span> <span class="s">"NCSC-FI VULNERABILITIES SUMMARY 2026-08-09"</span><span class="punct">,</span>
+  <span class="k">"date"</span><span class="punct">:</span> <span class="s">"2026-08-10T05:00:02+03:00"</span><span class="punct">,</span>
+  <span class="k">"body"</span><span class="punct">:</span> <span class="s">"TLP:CLEAR\n\nNCSC-FI VULNERABILITIES SUMMARY 2026-08-09...\n\nCRITICAL VULNERABILITIES\nMultiple Vulnerabilities in HPE Aruba Networking Private 5G Core..."</span>
+<span class="punct">}</span></pre>
+  </div>
+
+  <p class="caption">
+    Sender domain (<code>@traficom.fi</code>) was verified before forwarding. The digest that day contained one critical (CVSS 10.0) and two severe vulnerabilities. Full terminal log below, from both the main script and the local test receiver.
+  </p>
+
+  <details>
+    <summary>View full terminal output</summary>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">$ python ncsc_forward.py</span>
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="log">$ python ncsc_forward.py
+
+Starting fetch at 2026-08-10T11:55:25.997368
+Attempting to connect to IMAP server.
+<span class="ok">IMAP connection successful.</span>
+<span class="ok">Email login successful.</span>
+<span class="ok">Correct sender found:</span> ncsc-fi-newsbot@TRAFICOM.FI | Subject: NCSC-FI VULNERABILITIES SUMMARY 2026-08-09
+JSON Payload:
+{
+  "from": "ncsc-fi-newsbot@TRAFICOM.FI",
+  "subject": "NCSC-FI VULNERABILITIES SUMMARY 2026-08-09",
+  "date": "2026-08-10T05:00:02+03:00",
+  "body": "\r\nTLP:CLEAR\r\n\r\nNCSC-FI VULNERABILITIES SUMMARY 2026-08-09\r\n\r\nT\u00e4m\u00e4 on Liikenne- ja viestint\u00e4viraston Kyberturvallisuuskeskuksen p\u00e4ivitt\u00e4inen\r\n haavoittuvuuskooste.\r\n\r\nThis is the daily digest of the most recent vulnerabilities by National Cyber \r\nSecurity Centre of Finland (NCSC-FI) at TRAFICOM.\r\n\r\nDet h\u00e4r \u00e4r ett dagligt sammandrag av nya s\u00e5rbarheter som publiceras av \r\nCybers\u00e4kerhetscentret vid Transport- och kommunikationsverket.\r\n\r\n***\r\n\r\nCRITICAL VULNERABILITIES\r\n\r\n\r\nMultiple Vulnerabilities in HPE Aruba Networking Private 5G Core\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05119en_us&docLocale=en_US\r\nClassification: Critical, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 10.0\r\nCVEs: CVE-2026-54763, CVE-2026-33377\r\n\r\nHPE Aruba Networking has released a patch for HPE Aruba Networking Private 5G \r\nCore to address multiple security vulnerabilities in third-party components \r\n(Traefik and Grafana). These vulnerabilities could allow for authentication \r\nbypass or privilege escalation.\r\n\r\n---\r\n\r\nSEVERE VULNERABILITIES\r\n\r\n\r\nMultiple vulnerabilities in HPE Cray XD670 Server\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbhf05068en_us&docLocale=en_US\r\nClassification: Severe, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 8.2\r\nCVEs: CVE-2025-35991, CVE-2022-23932\r\nSee also: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbhf05067en_us&docLocale=en_US\r\n\r\nCVE-2025-35991 (CVSS: 5.3): A potential security vulnerability in HPE Cray \r\nXD670 server using certain Intel processors could be locally exploited to \r\nallow disclosure of information. For more information on the vulnerability, \r\nplease see Intel Security Advisory INTEL-SA-01413, UEFI Reference Firmware \r\nAdvisory.\r\n\r\nCVE-2022-23932 (CVSS: 8.2): Potential security vulnerabilities in HPE Cray \r\nXD670 server using AMI BIOS could be locally exploited to allow escalation of \r\nprivilege, arbitrary code execution, unauthorized code execution, denial of \r\nservice, and information disclosure.\r\n\r\n---\r\n\r\nMultiple vulnerabilities in HPE Cray Servers Using Intel Processors\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbcr05043en_us&docLocale=en_US\r\nClassification: Severe, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 7.9\r\nCVEs: CVE-2025-30513, CVE-2025-31944, CVE-2025-32007, CVE-2025-32467, CVE-2025-27572, CVE-2025-27940\r\n\r\nPotential security vulnerabilities have been identified in HPE Cray servers \r\nusing Intel processors could be locally exploited to allow escalation of \r\nprivilege, denial of service, and information disclosure. For more information\r\n on this vulnerability, please see Intel Security Advisory INTEL-SA-01397, \r\n2026.1 IPU, Intel Trust Domain Extensions (Intel TDX) module Advisory.\r\n\r\n---\r\n\r\nThe classification (Critical, Severe, Important or Low) depends on the\r\nCVSS score, information about known exploits, expected or known active\r\nexploitation and commonness of the software or library. Assess the\r\nclassification for each vulnerability related to your system.\r\n\r\n- - Critical: Update or mitigate as soon as possible.\r\n- - Severe: Update or mitigate at your earliest convinience.\r\n- - Important: Update and mitigate on a schedule based on your own risk\r\nassessment.\r\n\r\n***\r\n\r\nNCSC-FI VULNERABILITIES -koosteessa kerromme viimeksi tietoomme tulleista \r\nohjelmistohaavoittuvuuksia. Kaikista haavoittuvuuksista ei julkaista erikseen \r\nsuomenkielist\u00e4 haavoittuvuustiedotetta. Kooste l\u00e4hetet\u00e4\u00e4n kaikille \r\nhaavoittuvuustiedotteiden tilaajille.\r\n\r\nNCSC-FI publishes a daily digest of the most recent vulnerabilities. The \r\ndigest is sent to the subscribers of the vulnerability advisories.\r\n\r\nI NCSC-FI VULNERABILITIES sammandraget av s\u00e5rbarheter ber\u00e4ttar vi om de \r\nsenaste programs\u00e5rbarheterna. Vi skriver inte ett s\u00e5rbarhetsmeddelande \u00f6ver \r\nalla s\u00e5rbarheter. Sammandraget skickas till alla som abonnerat p\u00e5 \r\ns\u00e5rbarhetsmeddelandena.\r\n\r\n"
+}
+
+<span class="warn">Forwarding status: 200</span>
+Receiver response: {"apikey":"test123","status":"received"}
+
+<span class="dim">Execution time: 3.26 seconds
+Waiting 60 minutes before next run...</span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">$ python test_receiver.py</span>
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="log">$ python test_receiver.py
+
+<span class="dim">Serving Flask app 'test_receiver'
+Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+Running on http://127.0.0.1:5000
+Press CTRL+C to quit</span>
+
+<span class="ok">Message received:</span> {'from': 'ncsc-fi-newsbot@TRAFICOM.FI', 'subject': 'NCSC-FI VULNERABILITIES SUMMARY 2026-08-09', 'date': '2026-08-10T05:00:02+03:00', 'body': '\r\nTLP:CLEAR\r\n\r\nNCSC-FI VULNERABILITIES SUMMARY 2026-08-09\r\n\r\nT\u00e4m\u00e4 on Liikenne- ja viestint\u00e4viraston Kyberturvallisuuskeskuksen p\u00e4ivitt\u00e4inen\r\n haavoittuvuuskooste.\r\n\r\nThis is the daily digest of the most recent vulnerabilities by National Cyber \r\nSecurity Centre of Finland (NCSC-FI) at TRAFICOM.\r\n\r\nDet h\u00e4r \u00e4r ett dagligt sammandrag av nya s\u00e5rbarheter som publiceras av \r\nCybers\u00e4kerhetscentret vid Transport- och kommunikationsverket.\r\n\r\n***\r\n\r\nCRITICAL VULNERABILITIES\r\n\r\n\r\nMultiple Vulnerabilities in HPE Aruba Networking Private 5G Core\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05119en_us&docLocale=en_US\r\nClassification: Critical, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 10.0\r\nCVEs: CVE-2026-54763, CVE-2026-33377\r\n\r\nHPE Aruba Networking has released a patch for HPE Aruba Networking Private 5G \r\nCore to address multiple security vulnerabilities in third-party components \r\n(Traefik and Grafana). These vulnerabilities could allow for authentication \r\nbypass or privilege escalation.\r\n\r\n---\r\n\r\nSEVERE VULNERABILITIES\r\n\r\n\r\nMultiple vulnerabilities in HPE Cray XD670 Server\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbhf05068en_us&docLocale=en_US\r\nClassification: Severe, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 8.2\r\nCVEs: CVE-2025-35991, CVE-2022-23932\r\nSee also: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbhf05067en_us&docLocale=en_US\r\n\r\nCVE-2025-35991 (CVSS: 5.3): A potential security vulnerability in HPE Cray \r\nXD670 server using certain Intel processors could be locally exploited to \r\nallow disclosure of information. For more information on the vulnerability, \r\nplease see Intel Security Advisory INTEL-SA-01413, UEFI Reference Firmware \r\nAdvisory.\r\n\r\nCVE-2022-23932 (CVSS: 8.2): Potential security vulnerabilities in HPE Cray \r\nXD670 server using AMI BIOS could be locally exploited to allow escalation of \r\nprivilege, arbitrary code execution, unauthorized code execution, denial of \r\nservice, and information disclosure.\r\n\r\n---\r\n\r\nMultiple vulnerabilities in HPE Cray Servers Using Intel Processors\r\nURL: https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbcr05043en_us&docLocale=en_US\r\nClassification: Severe, Solution: Official Fix, Exploit Maturity: Not Defined, CVSSv3.1: 7.9\r\nCVEs: CVE-2025-30513, CVE-2025-31944, CVE-2025-32007, CVE-2025-32467, CVE-2025-27572, CVE-2025-27940\r\n\r\nPotential security vulnerabilities have been identified in HPE Cray servers \r\nusing Intel processors could be locally exploited to allow escalation of \r\nprivilege, denial of service, and information disclosure. For more information\r\n on this vulnerability, please see Intel Security Advisory INTEL-SA-01397, \r\n2026.1 IPU, Intel Trust Domain Extensions (Intel TDX) module Advisory.\r\n\r\n---\r\n\r\nThe classification (Critical, Severe, Important or Low) depends on the\r\nCVSS score, information about known exploits, expected or known active\r\nexploitation and commonness of the software or library. Assess the\r\nclassification for each vulnerability related to your system.\r\n\r\n- - Critical: Update or mitigate as soon as possible.\r\n- - Severe: Update or mitigate at your earliest convinience.\r\n- - Important: Update and mitigate on a schedule based on your own risk\r\nassessment.\r\n\r\n***\r\n\r\nNCSC-FI VULNERABILITIES -koosteessa kerromme viimeksi tietoomme tulleista \r\nohjelmistohaavoittuvuuksia. Kaikista haavoittuvuuksista ei julkaista erikseen \r\nsuomenkielist\u00e4 haavoittuvuustiedotetta. Kooste l\u00e4hetet\u00e4\u00e4n kaikille \r\nhaavoittuvuustiedotteiden tilaajille.\r\n\r\nNCSC-FI publishes a daily digest of the most recent vulnerabilities. The \r\ndigest is sent to the subscribers of the vulnerability advisories.\r\n\r\nI NCSC-FI VULNERABILITIES sammandraget av s\u00e5rbarheter ber\u00e4ttar vi om de \r\nsenaste programs\u00e5rbarheterna. Vi skriver inte ett s\u00e5rbarhetsmeddelande \u00f6ver \r\nalla s\u00e5rbarheter. Sammandraget skickas till alla som abonnerat p\u00e5 \r\ns\u00e5rbarhetsmeddelandena.\r\n\r\n'}
+Received apikey: test123
+<span class="warn">127.0.0.1 - - [10/Aug/2026 11:55:28] "POST /receive-message HTTP/1.1" 200 -</span></div>
+    </div>
+  </details>
+
+</div>
+</body>
+</html>
