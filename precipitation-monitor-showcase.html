@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precipitation Monitor — Project Showcase</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #222;
+    line-height: 1.5;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+  }
+  p.subtitle {
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  img {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    display: block;
+    margin-bottom: 24px;
+  }
+  .links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .links a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #222;
+    font-size: 0.95rem;
+  }
+  .links a:hover {
+    background: #e6e6e6;
+  }
+  section {
+    margin-bottom: 24px;
+  }
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+  ul {
+    margin-top: 0;
+  }
+  footer {
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #777;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Precipitation Monitor</h1>
+  <p class="subtitle">A Gradio web app for monitoring real-time and forecasted precipitation in South Savo, Finland.</p>
+
+  <img src="precipitation-monitor-app-screenshot.jpg" alt="Screenshot of the Precipitation Monitor app showing actual and predicted precipitation data for several South Savo weather stations">
+
+  <div class="links">
+    <a href="https://github.com/ajkiv/precipitation-monitor">GitHub Project</a>
+    <a href="https://precipitation-monitor.onrender.com">Live App</a>
+  </div>
+
+  <section>
+    <h2>What it does</h2>
+    <ul>
+      <li>Fetches actual precipitation data from FMI observation stations across South Savo</li>
+      <li>Fetches forecasted precipitation from FMI's Harmonie surface model</li>
+      <li>Classifies precipitation into warning levels (Mild, Moderate, Severe) based on configurable thresholds</li>
+      <li>Displays results in a simple Gradio interface, times shown in Helsinki local time</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Built with</h2>
+    <ul>
+      <li>Python, Gradio</li>
+      <li>FMI Open Data API (WFS)</li>
+      <li>Deployed on Render</li>
+    </ul>
+  </section>
+
+  <footer>
+    Data provided by the <a href="https://en.ilmatieteenlaitos.fi/open-data">Finnish Meteorological Institute</a>, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+  </footer>
+
+</body>
+</html>
