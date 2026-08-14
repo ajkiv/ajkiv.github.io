@@ -7,7 +7,7 @@
 <style>
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    max-width: 800px;
+    max-width: 1100px;
     margin: 40px auto;
     padding: 0 20px;
     color: #222;
@@ -28,6 +28,13 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     display: block;
+    margin-bottom: 8px;
+    cursor: zoom-in;
+  }
+  p.img-caption {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 0;
     margin-bottom: 24px;
   }
   .links {
@@ -73,7 +80,10 @@
   <h1>Precipitation Monitor</h1>
   <p class="subtitle">A Gradio web app for monitoring real-time and forecasted precipitation in South Savo, Finland.</p>
 
-  <img src="precipitation-monitor-app-screenshot.jpg" alt="Screenshot of the Precipitation Monitor app showing actual and predicted precipitation data for several South Savo weather stations">
+  <a href="precipitation-monitor-app-screenshot.jpg" target="_blank" rel="noopener">
+    <img src="precipitation-monitor-app-screenshot.jpg" alt="Screenshot of the Precipitation Monitor app showing actual and predicted precipitation data for several South Savo weather stations">
+  </a>
+  <p class="img-caption">Click the screenshot to view it full-size</p>
 
   <div class="links">
     <a href="https://github.com/ajkiv/precipitation-monitor">GitHub Project</a>
