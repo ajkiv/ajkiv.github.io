@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Energy Management System — Project Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EDEFE9;
+    --ink: #1F3A2E;
+    --ink-soft: #4B5F53;
+    --line: #C9CBBE;
+    --accent: #A6472A;
+    --maxw: 860px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2 { font-family: 'Zilla Slab', Georgia, serif; margin: 0 0 0.4em; line-height: 1.15; }
+  a { color: var(--accent); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 70px 24px 60px; }
+
+  h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
+  .sub { color: var(--ink-soft); max-width: 60ch; margin: 14px 0 32px; }
+
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+  .btn {
+    padding: 11px 18px; border-radius: 4px; text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; border: 1px solid var(--ink);
+  }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-ghost { color: var(--ink); }
+
+  figure { margin: 0 0 44px; }
+  figure img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 4px;
+  }
+  figcaption { font-size: 0.8rem; color: var(--ink-soft); margin-top: 8px; }
+
+  section { margin-bottom: 40px; }
+  section h2 { font-size: 1.25rem; margin-bottom: 10px; }
+  section p { color: var(--ink-soft); max-width: 68ch; margin: 0; }
+
+  .credit {
+    border-left: 3px solid var(--accent); padding: 4px 20px; font-size: 0.88rem; color: var(--ink-soft);
+  }
+  .credit p { margin: 0 0 8px; }
+  .credit p:last-child { margin-bottom: 0; }
+
+  footer { border-top: 1px dashed var(--line); padding-top: 24px; font-size: 0.85rem; color: var(--ink-soft); }
+  footer a { margin-right: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Farm Energy Management System</h1>
+  <p class="sub">
+    An AI-assisted dashboard that combines a farm's electricity metering, CHP unit output, weather,
+    and price forecasts into one platform — giving operators plain-language recommendations for
+    optimizing energy use.
+  </p>
+
+  <div class="cta-row">
+    <!-- TODO: replace # with your real GitHub repo URL -->
+    <a href="#" class="btn btn-primary">View code on GitHub →</a>
+    <!-- TODO: replace # with the live deployed demo URL -->
+    <a href="#" class="btn btn-ghost">Open live demo ↗</a>
+  </div>
+
+  <figure>
+    <img src="farmisahko-app-showcase.jpg" alt="Full dashboard view showing current data, energy price chart, and AI-generated recommendations">
+    <figcaption>The full dashboard — live data panel, price chart, and generated recommendations</figcaption>
+  </figure>
+
+  <section>
+    <h2>My contribution</h2>
+    <p>
+      I built the backend integration that connects to the farm's electricity system and polls
+      live data from it — pulling Volter CHP telemetry and SuomiConnect metering readings into
+      the data pipeline the rest of the dashboard runs on.
+    </p>
+  </section>
+
+  <section>
+    <h2>Project &amp; credits</h2>
+    <div class="credit">
+      <p>
+        Developed by the DAME project (South Savo Data Economy Accelerator), South-Eastern Finland
+        University of Applied Sciences — Digitalia, in partnership with Harjun Maatila Oy,
+        SuomiConnect Oy, and ProAgria Ry. Co-funded by the European Union via the European
+        Regional Development Fund.
+      </p>
+      <p>This was a multi-contributor pilot project — see "My contribution" above for my part. Licensed under MIT.</p>
+    </div>
+  </section>
+
+  <footer>
+    <!-- TODO: replace these with your real links -->
+    <a href="#">GitHub repository</a>
+    <a href="#">Live demo</a>
+    <a href="#">Contact / LinkedIn</a>
+  </footer>
+
+</div>
+</body>
+</html>
