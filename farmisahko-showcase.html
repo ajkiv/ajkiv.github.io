@@ -44,6 +44,11 @@
     width: 100%; height: auto; display: block;
     border: 1px solid var(--line); border-radius: 4px;
   }
+  figure video {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 4px;
+    background: #000;
+  }
   figcaption { font-size: 0.8rem; color: var(--ink-soft); margin-top: 8px; }
 
   section { margin-bottom: 40px; }
@@ -80,6 +85,14 @@
   <figure>
     <img src="farmisahko-app-showcase.jpg" alt="Full dashboard view showing current data, energy price chart, and AI-generated recommendations">
     <figcaption>The full dashboard — live data panel, price chart, and generated recommendations</figcaption>
+  </figure>
+
+  <figure>
+    <video controls width="100%" preload="metadata" poster="farmisahko-app-showcase.jpg">
+      <source src="https://raw.githubusercontent.com/ajkiv/ai-energy-optimizer/main/videos/farmisahko-demo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <figcaption>Demo — live data feeding the AI recommendation engine, running locally in seconds</figcaption>
   </figure>
 
   <section>
