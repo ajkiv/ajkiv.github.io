@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapcat Fire Dash — Cartographia Game Jam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c130d;
+    --parchment:#ece0c6;
+    --parchment-dim:#d8c9a4;
+    --navy-deep:#131f2b;
+    --navy-mid:#1d2f40;
+    --navy-soft:#28425a;
+    --fire-orange:#e8722a;
+    --fire-yellow:#f5c43d;
+    --brass:#b8925a;
+    --brass-dim:#8a6c44;
+    --rose:#d98f94;
+    --smoke:#94a3ac;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--navy-deep);
+    color:var(--parchment);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    margin:0;
+    color:#fbf4e4;
+  }
+
+  a{color:inherit;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    font-size:0.72rem;
+    color:var(--fire-yellow);
+  }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Vitrine frame: signature element ---------- */
+  .vitrine{
+    position:relative;
+    padding:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
+    border:1px solid rgba(184,146,90,0.35);
+  }
+  .vitrine::before, .vitrine::after,
+  .vitrine .corner-tl, .vitrine .corner-br{
+    content:"";
+    position:absolute;
+    width:26px;
+    height:26px;
+    border:2px solid var(--brass);
+  }
+  .vitrine::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+  .vitrine::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+  .vitrine .corner-tl{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
+  .vitrine .corner-br{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
+  .vitrine img{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .vitrine-caption{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    color:var(--smoke);
+    padding-top:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .vitrine-caption span:last-child{ color:var(--brass); text-align:right; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-end;
+    background:
+      linear-gradient(180deg, rgba(19,31,43,0.35) 0%, rgba(19,31,43,0.55) 55%, rgba(13,19,26,0.94) 100%),
+      url('mapcat_4_running_in_map.png') center 30%/cover no-repeat;
+    overflow:hidden;
+  }
+  .hero-inner{
+    position:relative;
+    width:100%;
+    padding:0 32px 64px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .hero .eyebrow{ margin-bottom:18px; display:block; }
+  .hero h1{
+    font-size:clamp(3rem, 9vw, 6.4rem);
+    font-weight:900;
+    line-height:0.95;
+    letter-spacing:-0.01em;
+    text-shadow:0 6px 30px rgba(0,0,0,0.45);
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--fire-orange);
+  }
+  .hero p.tagline{
+    max-width:520px;
+    margin:22px 0 30px;
+    font-size:1.08rem;
+    color:#e7dcc4;
+  }
+  .hero-ctas{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+  }
+  .btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    letter-spacing:0.05em;
+    text-decoration:none;
+    padding:14px 22px;
+    display:inline-block;
+    border:2px solid transparent;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary{
+    background:var(--fire-yellow);
+    color:#241a10;
+    font-weight:500;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(245,196,61,0.25); }
+  .btn-ghost{
+    border-color:rgba(236,224,198,0.4);
+    color:#f2e8d3;
+  }
+  .btn-ghost:hover{ border-color:var(--fire-yellow); color:var(--fire-yellow); }
+
+  .legend-box{
+    position:absolute;
+    right:32px;
+    bottom:64px;
+    width:230px;
+    background:rgba(28,19,13,0.72);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(184,146,90,0.5);
+    padding:16px 18px;
+    display:none;
+  }
+  .legend-box h3{
+    font-size:0.7rem;
+    font-family:'JetBrains Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--brass);
+    margin-bottom:10px;
+    font-weight:500;
+  }
+  .legend-box dl{ margin:0; font-size:0.82rem; }
+  .legend-box dt{ color:var(--fire-yellow); font-family:'JetBrains Mono',monospace; font-size:0.72rem; }
+  .legend-box dd{ margin:0 0 8px; color:#e7dcc4; }
+
+  @media (min-width:860px){
+    .legend-box{ display:block; }
+  }
+
+  /* ---------- Ticker strip ---------- */
+  .ticker{
+    border-top:1px solid var(--brass-dim);
+    border-bottom:1px solid var(--brass-dim);
+    background:var(--navy-mid);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:14px 0;
+  }
+  .ticker-track{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    color:var(--smoke);
+    animation:scroll 32s linear infinite;
+  }
+  .ticker-track span{ color:var(--fire-yellow); padding:0 10px; }
+  @keyframes scroll{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+
+  /* ---------- Sections ---------- */
+  section{
+    padding:96px 0;
+    position:relative;
+  }
+  .section-head{
+    margin-bottom:40px;
+    max-width:640px;
+  }
+  .section-head .eyebrow{ margin-bottom:10px; }
+  .section-head h2{
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    font-weight:600;
+  }
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:start;
+  }
+  @media (max-width:820px){
+    .grid-2{ grid-template-columns:1fr; }
+  }
+
+  p{ color:#dcd0b5; }
+  .lede{ font-size:1.05rem; color:#e7dcc4; }
+
+  .fact-card{
+    background:var(--parchment);
+    color:var(--ink);
+    padding:26px 28px;
+    border:1px solid var(--brass-dim);
+  }
+  .fact-card h3{
+    color:var(--ink);
+    font-size:1.1rem;
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .fact-card p{ color:#3a2c1e; font-size:0.94rem; margin:0; }
+  .fact-card + .fact-card{ margin-top:18px; }
+
+  .compass-wrap{
+    position:relative;
+  }
+  .compass{
+    position:absolute;
+    top:-40px;
+    right:-40px;
+    width:180px;
+    height:180px;
+    opacity:0.12;
+    z-index:0;
+  }
+
+  .stat-row{
+    display:flex;
+    gap:36px;
+    flex-wrap:wrap;
+    margin-top:28px;
+  }
+  .stat{
+    font-family:'JetBrains Mono',monospace;
+  }
+  .stat .num{
+    font-family:'Fraunces',serif;
+    font-size:2.1rem;
+    font-weight:600;
+    color:var(--fire-yellow);
+    display:block;
+    line-height:1;
+  }
+  .stat .label{
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    color:var(--smoke);
+    text-transform:uppercase;
+  }
+
+  /* placard style for how-to-play */
+  .placard{
+    background:var(--navy-soft);
+    border:1px solid rgba(184,146,90,0.35);
+    padding:32px;
+  }
+  .control-row{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:14px 0;
+    border-bottom:1px solid rgba(236,224,198,0.12);
+  }
+  .control-row:last-child{ border-bottom:none; }
+  .key{
+    font-family:'JetBrains Mono',monospace;
+    background:var(--fire-yellow);
+    color:#241a10;
+    font-weight:500;
+    font-size:0.8rem;
+    padding:6px 12px;
+    min-width:20px;
+    text-align:center;
+  }
+  .key.exit{ background:#3a7fd9; color:#eaf1ff; }
+  .control-row p{ margin:0; color:#e7dcc4; font-size:0.92rem; }
+
+  blockquote{
+    margin:0;
+    padding:0 0 0 26px;
+    border-left:3px solid var(--fire-orange);
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.3rem;
+    color:#f3e9d2;
+    line-height:1.5;
+  }
+  .attribution{
+    margin-top:18px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--smoke);
+  }
+  .attribution a{ color:var(--fire-yellow); text-decoration:none; }
+
+  footer{
+    border-top:1px solid var(--brass-dim);
+    padding:64px 0 40px;
+    background:var(--navy-mid);
+  }
+  .footer-grid{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:32px;
+  }
+  footer h2{ font-size:1.6rem; margin-bottom:14px; }
+  .tech-tags{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    border:1px solid var(--brass-dim);
+    color:var(--brass);
+    padding:5px 10px;
+    letter-spacing:0.03em;
+  }
+  .credits{
+    font-size:0.86rem;
+    color:var(--smoke);
+    max-width:320px;
+  }
+  .credits a{ color:var(--fire-yellow); text-decoration:none; }
+  .fine-print{
+    margin-top:48px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    color:#5c6d78;
+    letter-spacing:0.03em;
+  }
+
+  ::selection{ background:var(--fire-orange); color:#1c130d; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Cartographia Game Jam · 7–9 March 2025 · National Archives of Finland</span>
+    <h1>Mapcat<br><em>Fire</em> Dash</h1>
+    <p class="tagline">A cat woven from 19th-century parchment, sprinting across the streets of Turku as the Great Fire of 1827 climbs the map behind it.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="https://wywernywin.itch.io/mapcatfiredash" target="_blank" rel="noopener">Play on itch.io →</a>
+      <a class="btn btn-ghost" href="#the-jam">The 48-hour brief</a>
+    </div>
+  </div>
+  <div class="legend-box">
+    <h3>Field notes</h3>
+    <dl>
+      <dt>Engine</dt>
+      <dd>Unity, C#</dd>
+      <dt>Built in</dt>
+      <dd>48 hours, solo on code</dd>
+      <dt>Terrain source</dt>
+      <dd>1827 map of Turku, National Archives of Finland</dd>
+    </dl>
+  </div>
+</div>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>48 HOURS</span> · MARCH 2025 · <span>NATIONAL ARCHIVES OF FINLAND, HELSINKI</span> · UNITY + C# · <span>TURUN PALO 1827</span> · CARTOGRAPHIA GAME JAM · <span>48 HOURS</span> · MARCH 2025 · <span>NATIONAL ARCHIVES OF FINLAND, HELSINKI</span> · UNITY + C# · <span>TURUN PALO 1827</span> · CARTOGRAPHIA GAME JAM ·
+  </div>
+</div>
+
+<!-- THE JAM -->
+<section id="the-jam">
+  <div class="wrap">
+    <div class="grid-2">
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">01 — The brief</span>
+          <h2>Bring a historical map to life, in a weekend.</h2>
+        </div>
+        <p class="lede">Cartographia Game Jam was hosted by the National Archives of Finland at their historic building on Rauhankatu, Helsinki — six teams, one weekend, and a shared archive of digitized maps dating back to the 17th century.</p>
+        <p>The only rule: your game had to connect to a historical map somehow — as inspiration, as an asset, or as a mechanic. Any engine was fair game. I worked in Unity as part of the DAME project team from South-Eastern Finland University of Applied Sciences, alongside R&amp;D specialist Jani Saari.</p>
+        <div class="stat-row">
+          <div class="stat"><span class="num">48h</span><span class="label">build window</span></div>
+          <div class="stat"><span class="num">6</span><span class="label">teams entered</span></div>
+          <div class="stat"><span class="num">1827</span><span class="label">map date used</span></div>
+        </div>
+      </div>
+      <div class="fact-card">
+        <h3>Why a map is the level</h3>
+        <p>Instead of treating the archive material as background art, the map became the terrain itself — its streets, plots, and coastline read directly as platforms, gaps, and hazards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE CONCEPT -->
+<section style="background:var(--navy-mid);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">02 — The concept</span>
+      <h2>Outrun the fire that ate three-quarters of a city.</h2>
+    </div>
+    <div class="grid-2" style="align-items:center;">
+      <div>
+        <p class="lede">The level geometry is drawn from an 1827 map of Turku's harbour quarter — the same year as <em>Turun palo</em>, the Great Fire of Turku, one of the most destructive urban fires in Finnish history.</p>
+        <p>You play a cat cut from parchment, running across the map as flame and smoke spread relentlessly behind you. Fall behind, and the fire catches you. Reach the far edge of the map, and you'll find a fire extinguisher waiting — the only way to put the blaze out for good.</p>
+      </div>
+      <div class="vitrine">
+        <div class="corner-tl"></div><div class="corner-br"></div>
+        <img src="mapcat_4_running_in_map.png" alt="The cat character running across a level built from the 1827 map of Turku, with smoke rising from burning buildings ahead">
+        <div class="vitrine-caption">
+          <span>Level terrain — 1827 map, Turku harbour quarter</span>
+          <span>fig. 01</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOT / MECHANIC -->
+<section>
+  <div class="wrap">
+    <div class="grid-2">
+      <div class="vitrine">
+        <div class="corner-tl"></div><div class="corner-br"></div>
+        <img src="mapcat_2.png" alt="Gameplay screenshot showing the map-cat character navigating a platform section, with a small map icon suspended above a gap">
+        <div class="vitrine-caption">
+          <span>Platforming section, mid-run</span>
+          <span>fig. 02</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">03 — The mechanic</span>
+          <h2>Momentum is the whole game.</h2>
+        </div>
+        <p>There's no fighting the fire, only staying ahead of it. Every platform, gap, and ledge is pulled straight from the archival map's linework, so reading the terrain and reading the historical document become the same act.</p>
+        <p>Built solo on code under real time pressure — including working through Unity issues on-site — with the National Archives community troubleshooting alongside us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO PLAY -->
+<section style="background:var(--navy-mid);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">04 — How to play</span>
+      <h2>The title screen, unchanged.</h2>
+    </div>
+    <div class="grid-2" style="align-items:center;">
+      <div class="vitrine">
+        <div class="corner-tl"></div><div class="corner-br"></div>
+        <img src="mapcat_3.png" alt="Title screen reading Mapcat Fire Dash, with a yellow button reading press g to start and a blue button reading press x to exit">
+        <div class="vitrine-caption">
+          <span>Title screen</span>
+          <span>fig. 03</span>
+        </div>
+      </div>
+      <div class="placard">
+        <div class="control-row">
+          <span class="key">G</span>
+          <p>Start the run</p>
+        </div>
+        <div class="control-row">
+          <span class="key exit">X</span>
+          <p>Exit to desktop</p>
+        </div>
+        <div class="control-row">
+          <p style="color:var(--smoke); font-size:0.85rem;">Move and jump to stay a step ahead of the flames — the map doesn't stop moving once you start.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISPATCH -->
+<section>
+  <div class="wrap" style="max-width:760px;">
+    <span class="eyebrow">05 — Dispatch from the archives</span>
+    <div style="height:24px;"></div>
+    <blockquote>
+      "Technical challenges, like the ones we ran into with Unity, added extra tension — but we worked through them together, with a calm attitude and a genuinely helpful community around us."
+    </blockquote>
+    <div class="attribution">
+      From Xamk's write-up of the DAME project's visit to Cartographia Game Jam, 16 May 2025 — <a href="https://www.xamk.fi/uutishuone/selaa/" target="_blank" rel="noopener">read the full article at xamk.fi</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h2>Play Mapcat Fire Dash</h2>
+        <a class="btn btn-primary" href="https://wywernywin.itch.io/mapcatfiredash" target="_blank" rel="noopener">wywernywin.itch.io/mapcatfiredash →</a>
+        <div class="tech-tags">
+          <span class="tag">UNITY</span>
+          <span class="tag">C#</span>
+          <span class="tag">GAME JAM · 48H</span>
+        </div>
+      </div>
+      <div class="credits">
+        Built by Antti Kiviniemi with Jani Saari, representing the DAME project at South-Eastern Finland University of Applied Sciences (Xamk), at Cartographia Game Jam — hosted by the National Archives of Finland, Helsinki, March 2025.
+      </div>
+    </div>
+    <div class="fine-print">Historical map material courtesy of the National Archives of Finland. Portfolio page for Antti Kiviniemi.</div>
+  </div>
+</footer>
+
+</body>
+</html>
