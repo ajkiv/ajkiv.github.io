@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finnish Traffic Law Chatbot — Project Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EDEFE9;
+    --ink: #1F3A2E;
+    --ink-soft: #4B5F53;
+    --line: #C9CBBE;
+    --accent: #A6472A;
+    --maxw: 860px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2 { font-family: 'Zilla Slab', Georgia, serif; margin: 0 0 0.4em; line-height: 1.15; }
+  a { color: var(--accent); }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 70px 24px 60px; }
+
+  h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
+  .sub { color: var(--ink-soft); max-width: 60ch; margin: 14px 0 32px; }
+
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+  .btn {
+    padding: 11px 18px; border-radius: 4px; text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; border: 1px solid var(--ink);
+  }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-ghost { color: var(--ink); }
+
+  figure { margin: 0 0 44px; }
+  figure img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 4px;
+  }
+  figure video {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 4px;
+    background: #000;
+  }
+  figcaption { font-size: 0.8rem; color: var(--ink-soft); margin-top: 8px; }
+
+  section { margin-bottom: 40px; }
+  section h2 { font-size: 1.25rem; margin-bottom: 10px; }
+  section p { color: var(--ink-soft); max-width: 68ch; margin: 0; }
+
+  .credit {
+    border-left: 3px solid var(--accent); padding: 4px 20px; font-size: 0.88rem; color: var(--ink-soft);
+  }
+  .credit p { margin: 0 0 8px; }
+  .credit p:last-child { margin-bottom: 0; }
+
+  footer { border-top: 1px dashed var(--line); padding-top: 24px; font-size: 0.85rem; color: var(--ink-soft); }
+  footer a { margin-right: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Finnish Traffic Law Chatbot</h1>
+  <p class="sub">
+    A Finnish-language chatbot that answers questions about traffic offences using the actual text
+    of the law. It finds the most relevant sections of the Criminal Code (Rikoslaki, chapter 23)
+    and gives them to an LLM, so the answer is grounded in the statute instead of guessed from memory.
+  </p>
+
+  <!--
+  <div class="cta-row">
+    <a href="https://github.com/YOUR-USERNAME/YOUR-REPO" class="btn btn-primary">View on GitHub →</a>
+  </div>
+  -->
+
+  <figure>
+    <video controls width="100%" preload="metadata" poster="law-prompter-thumbnail.jpg">
+      <source src="https://raw.githubusercontent.com/ajkiv/ajkiv.github.io/main/law-prompter-demo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <figcaption>Demo — a question asked in Finnish, answered together with the legal sections it was based on.</figcaption>
+  </figure>
+
+  <section>
+    <h2>How it works</h2>
+    <p>
+      The law text is split into individual sections (§), and each section is turned into an embedding
+      with a local multilingual model. When you ask a question, it is embedded the same way, and FAISS
+      retrieves the three most relevant sections. These are passed to an OpenAI model, which writes
+      the answer in Finnish.
+    </p>
+  </section>
+
+  <section>
+    <h2>Transparent by design</h2>
+    <p>
+      The interface shows three things: the generated answer, the legal sources used, and the full
+      retrieved passages. This makes it easy to check the answer against the law and shows exactly
+      how retrieval shapes the response. The model is instructed to separate statutory text from
+      explanation and to say when the material isn't enough.
+    </p>
+  </section>
+
+  <section>
+    <h2>Built with</h2>
+    <p>
+      Python, Gradio, Sentence Transformers (paraphrase-multilingual-MiniLM-L12-v2), FAISS, OpenAI API
+    </p>
+  </section>
+
+  <section>
+    <h2>Scope and next steps</h2>
+    <p>
+      This is a deliberately small v1: sections 1–12 only, with no conversation memory, reranking or
+      similarity threshold. Testing with real questions will show where retrieval or generation fails,
+      and those findings will guide v2. It is a demonstration, not legal advice.
+    </p>
+  </section>
+  
+  <section>
+    <h2>Code access</h2>
+    <p>
+      The source code for this project isn't public. I'm happy to walk through the implementation
+      live — architecture, key decisions, and a working demo — during an interview. Reach out at
+      <a href="mailto:a.kiviniemi@protonmail.com">a.kiviniemi@protonmail.com</a> and I'll set that up.
+    </p>
+  </section>
+
+</div>
+</body>
+</html>
